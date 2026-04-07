@@ -1,0 +1,174 @@
+<!DOCTYPE html>
+
+<html class="light" dir="rtl" lang="he"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Serif+Hebrew:wght@300;400;700&amp;family=Assistant:wght@300;400;600&amp;family=Playfair+Display:ital,wght@1,700&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<script id="tailwind-config">
+      tailwind.config = {
+        darkMode: "class",
+        theme: {
+          extend: {
+            "colors": {
+                    "primary": "#745a27",
+                    "gold": "#c9a96e",
+                    "gold-faded": "rgba(201, 169, 110, 0.5)",
+                    "gold-line": "rgba(201, 169, 110, 0.2)",
+                    "background": "#F5F3ED",
+                    "on-surface": "#1b1c18",
+                    "secondary": "#5f5e5e"
+            },
+            "fontFamily": {
+                    "headline": ["Noto Serif Hebrew", "serif"],
+                    "playfair": ["Playfair Display", "serif"],
+                    "body": ["Assistant", "sans-serif"]
+            }
+          },
+        },
+      }
+    </script>
+<style>
+        body { 
+            font-family: 'Assistant', sans-serif; 
+            background-color: #F5F3ED; 
+            color: #1b1c18; 
+            -webkit-font-smoothing: antialiased;
+        }
+        .serif-text { font-family: 'Noto Serif Hebrew', serif; }
+        .playfair-italic { font-family: 'Playfair Display', serif; font-style: italic; }
+        .material-symbols-outlined { font-variation-settings: 'FILL' 0, 'wght' 200, 'GRAD' 0, 'opsz' 24; vertical-align: middle; }
+        .airy-text { letter-spacing: 0.05em; line-height: 1.8; }
+        .category-label { font-size: 10px; letter-spacing: 0.2em; text-transform: uppercase; color: #c9a96e; }
+    </style>
+</head>
+<body class="bg-background text-on-surface">
+<!-- TopAppBar -->
+<nav class="flex flex-row-reverse justify-between items-center w-full px-8 py-8 top-0 sticky z-50 bg-[#F5F3ED] bg-opacity-90 backdrop-blur-sm">
+<h1 class="playfair-italic text-3xl font-bold text-on-surface tracking-tighter">pudin.</h1>
+<div class="flex items-center gap-6">
+<button class="text-on-surface hover:opacity-50 transition-opacity">
+<span class="material-symbols-outlined text-2xl" data-icon="shopping_bag">shopping_bag</span>
+</button>
+<button class="text-on-surface hover:opacity-50 transition-opacity">
+<span class="material-symbols-outlined text-2xl" data-icon="menu">menu</span>
+</button>
+</div>
+</nav>
+<main class="min-h-screen pb-32">
+<!-- Hero Section -->
+<section class="px-8 py-24 text-center">
+<h2 class="serif-text text-4xl md:text-5xl font-light text-on-surface mb-6 tracking-tight">
+            מאפים ביתיים מהלב
+        </h2>
+<p class="text-secondary airy-text font-light text-sm md:text-base">
+            הזמנות מתקבלות עד 3 ימים מראש
+        </p>
+</section>
+<!-- Menu Section -->
+<section class="px-8 max-w-2xl mx-auto">
+<!-- Centered Title with Gold Lines -->
+<div class="flex items-center justify-center gap-6 mb-20">
+<div class="h-[1px] flex-1 bg-gold-faded"></div>
+<h3 class="serif-text text-xl tracking-widest text-on-surface">התפריט</h3>
+<div class="h-[1px] flex-1 bg-gold-faded"></div>
+</div>
+<div class="space-y-0">
+<!-- Product Row 1 -->
+<div class="py-10 border-b border-gold-line group">
+<div class="category-label mb-3">CLASSIC</div>
+<div class="flex justify-between items-baseline">
+<div class="flex items-center gap-4">
+<span class="material-symbols-outlined text-gold opacity-40 group-hover:opacity-100 transition-opacity cursor-pointer" data-icon="expand_more">expand_more</span>
+<h4 class="serif-text text-lg font-normal text-on-surface">טירמיסו קלאסי</h4>
+</div>
+<span class="text-gold serif-text text-base">₪45</span>
+</div>
+</div>
+<!-- Product Row 2 -->
+<div class="py-10 border-b border-gold-line group">
+<div class="category-label mb-3">YEAST</div>
+<div class="flex justify-between items-baseline">
+<div class="flex items-center gap-4">
+<span class="material-symbols-outlined text-gold opacity-40 group-hover:opacity-100 transition-opacity cursor-pointer" data-icon="expand_more">expand_more</span>
+<h4 class="serif-text text-lg font-normal text-on-surface">שמרים קינמון וסוכר חום</h4>
+</div>
+<span class="text-gold serif-text text-base">₪38</span>
+</div>
+</div>
+<!-- Expanded Product (Redesigned for Fine Dining Look) -->
+<div class="py-16">
+<div class="mb-10 aspect-[4/3] overflow-hidden">
+<img alt="עוגת שמרים שוקולד" class="w-full h-full object-cover grayscale-[20%] hover:grayscale-0 transition-all duration-700" src="https://lh3.googleusercontent.com/aida-public/AB6AXuAWySJqdtKkX56VikAeKJdn7XUc0RDyAdsSI8fb8r5ox2KWaID_e4el2ovndjEw_DPdQcygJ5m687sWoZXOMQ_3qOkqq4Wl0C8SL1xpvE2qpltGPAKTsv_MV9ixXWXcVa_7Haa3fShYyRzL7oPQmv7V_Yxh7JSYH4iGGTFvTefLzqt64BTYK-GGps2U-nD3ZuddrSm9dLFnjUxed_bEKC4uHw4c3mN3RwkPGNBjhVFUXEFyLzHX6E4JRRbcUGDbkQHsmtxb6d5Hx3w"/>
+</div>
+<div class="text-center px-4">
+<div class="category-label mb-4">SIGNATURE SELECTION</div>
+<h4 class="serif-text text-2xl font-normal text-on-surface mb-4">עוגת שמרים שוקולד</h4>
+<p class="text-secondary airy-text font-light text-sm max-w-sm mx-auto mb-8">
+                        בצק חמאה עשיר שקופל שוב ושוב, במילוי שוקולד מריר איכותי וקראנץ׳ אגוזי לוז. נאפה בכל בוקר מחדש בהזמנה אישית.
+                    </p>
+<div class="flex flex-col items-center gap-6">
+<span class="text-gold serif-text text-xl">₪52</span>
+<button class="border border-gold text-gold hover:bg-gold hover:text-white px-10 py-3 text-xs tracking-widest uppercase transition-all duration-300">
+                            הוסף להזמנה
+                        </button>
+</div>
+</div>
+<div class="h-[1px] w-full bg-gold-line mt-16"></div>
+</div>
+<!-- Product Row 4 -->
+<div class="py-10 border-b border-gold-line group">
+<div class="category-label mb-3">CONFECTIONERY</div>
+<div class="flex justify-between items-baseline">
+<div class="flex items-center gap-4">
+<span class="material-symbols-outlined text-gold opacity-40 group-hover:opacity-100 transition-opacity cursor-pointer" data-icon="expand_more">expand_more</span>
+<h4 class="serif-text text-lg font-normal text-on-surface">מארז מקרונים (6 יח׳)</h4>
+</div>
+<span class="text-gold serif-text text-base">₪24</span>
+</div>
+</div>
+</div>
+</section>
+<!-- Editorial Quote -->
+<section class="px-10 py-32 text-center">
+<p class="serif-text italic text-secondary text-lg font-light leading-relaxed max-w-xs mx-auto opacity-70">
+            “הסוד הוא בפשטות, בחומרי הגלם הכי טובים, ובסבלנות שלוקח לבצק לתפוח.”
+        </p>
+</section>
+</main>
+<!-- Footer -->
+<footer class="w-full py-20 px-8 bg-[#F5F3ED] border-t border-gold-line text-right flex flex-col items-end">
+<span class="playfair-italic text-2xl mb-8 block text-on-surface">pudin.</span>
+<div class="space-y-3 mb-12 text-secondary airy-text text-xs tracking-wide">
+<p>רחוב המאפים 12, תל אביב</p>
+<p>050-1234567</p>
+<p>hi@pudin.co.il</p>
+</div>
+<div class="flex flex-row-reverse gap-8 mb-12 text-[10px] uppercase tracking-[0.2em] text-gold">
+<a class="hover:opacity-50 transition-opacity" href="#">צור קשר</a>
+<a class="hover:opacity-50 transition-opacity" href="#">משלוחים</a>
+<a class="hover:opacity-50 transition-opacity" href="#">תקנון</a>
+</div>
+<p class="text-secondary text-[10px] opacity-40 tracking-widest">© 2024 PUDIN. ARTISAN BAKERY</p>
+</footer>
+<!-- BottomNavBar -->
+<nav class="fixed bottom-0 left-0 w-full flex flex-row-reverse justify-around items-center pb-safe pt-4 backdrop-blur-md bg-[#F5F3ED]/90 z-50 border-t border-gold-line">
+<a class="flex flex-col items-center justify-center text-gold transition-all" href="#">
+<span class="material-symbols-outlined text-xl" data-icon="home" style="font-variation-settings: 'FILL' 1;">home</span>
+<span class="text-[9px] uppercase tracking-widest mt-1.5 font-light">בית</span>
+</a>
+<a class="flex flex-col items-center justify-center text-secondary hover:text-gold transition-all" href="#">
+<span class="material-symbols-outlined text-xl" data-icon="restaurant_menu">restaurant_menu</span>
+<span class="text-[9px] uppercase tracking-widest mt-1.5 font-light">תפריט</span>
+</a>
+<a class="flex flex-col items-center justify-center text-secondary hover:text-gold transition-all" href="#">
+<span class="material-symbols-outlined text-xl" data-icon="receipt_long">receipt_long</span>
+<span class="text-[9px] uppercase tracking-widest mt-1.5 font-light">הזמנות</span>
+</a>
+<a class="flex flex-col items-center justify-center text-secondary hover:text-gold transition-all" href="#">
+<span class="material-symbols-outlined text-xl" data-icon="person">person</span>
+<span class="text-[9px] uppercase tracking-widest mt-1.5 font-light">פרופיל</span>
+</a>
+</nav>
+</body></html>

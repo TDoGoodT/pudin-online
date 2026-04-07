@@ -6,7 +6,7 @@
   <title>pudin. by ziv bachar</title>
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-  <link href="https://fonts.googleapis.com/css2?family=Noto+Serif+Hebrew:wdth,wght@62.5..100,100..900&family=Assistant:wght@300;400;500;600&display=swap" rel="stylesheet" />
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@1,700&family=Noto+Serif+Hebrew:wdth,wght@62.5..100,100..900&family=Assistant:wght@300;400;500&display=swap" rel="stylesheet" />
   <link rel="stylesheet" href="style.css" />
 </head>
 <body>
@@ -28,13 +28,17 @@
   <!-- HERO -->
   <section class="hero">
     <p class="hero-label">מאפייה ביתית</p>
-    <h1 class="hero-title">מאפים ביתיים<br/>מהלב</h1>
+    <h1 class="hero-title">מאפים ביתיים מהלב</h1>
     <p class="hero-sub">מוכנים בהזמנה מראש · איסוף עצמי או משלוח</p>
   </section>
 
   <!-- MENU -->
   <main class="menu-section">
-    <h2 class="section-title">התפריט</h2>
+    <div class="section-title-wrap">
+      <div class="section-title-line"></div>
+      <h2 class="section-title">התפריט</h2>
+      <div class="section-title-line"></div>
+    </div>
 
     <!-- Category: Tiramisu -->
     <div class="category">
@@ -48,7 +52,7 @@
             </div>
             <div class="product-row-left">
               <span class="product-price">₪45</span>
-              <span class="expand-icon">&#8964;</span>
+              <span class="expand-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"/></svg></span>
             </div>
           </div>
           <div class="product-card" id="card-tiramisu-personal">
@@ -84,7 +88,7 @@
             </div>
             <div class="product-row-left">
               <span class="product-price">₪80</span>
-              <span class="expand-icon">&#8964;</span>
+              <span class="expand-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"/></svg></span>
             </div>
           </div>
           <div class="product-card" id="card-tiramisu-large">
@@ -120,7 +124,7 @@
         <div class="product-item" data-id="krantz-cinnamon">
           <div class="product-row" onclick="toggleProduct('krantz-cinnamon')">
             <div class="product-row-right"><span class="product-name">עוגת שמרים קינמון</span></div>
-            <div class="product-row-left"><span class="product-price">₪55</span><span class="expand-icon">&#8964;</span></div>
+            <div class="product-row-left"><span class="product-price">₪55</span><span class="expand-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"/></svg></span></div>
           </div>
           <div class="product-card" id="card-krantz-cinnamon">
             <div class="card-inner">
@@ -145,7 +149,7 @@
         <div class="product-item" data-id="krantz-choco">
           <div class="product-row" onclick="toggleProduct('krantz-choco')">
             <div class="product-row-right"><span class="product-name">עוגת שמרים שוקולד</span></div>
-            <div class="product-row-left"><span class="product-price">₪60</span><span class="expand-icon">&#8964;</span></div>
+            <div class="product-row-left"><span class="product-price">₪60</span><span class="expand-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"/></svg></span></div>
           </div>
           <div class="product-card" id="card-krantz-choco">
             <div class="card-inner">
@@ -170,7 +174,7 @@
         <div class="product-item" data-id="krantz-double">
           <div class="product-row" onclick="toggleProduct('krantz-double')">
             <div class="product-row-right"><span class="product-name">עוגת שמרים שוקולד כפול</span></div>
-            <div class="product-row-left"><span class="product-price">₪65</span><span class="expand-icon">&#8964;</span></div>
+            <div class="product-row-left"><span class="product-price">₪65</span><span class="expand-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"/></svg></span></div>
           </div>
           <div class="product-card" id="card-krantz-double">
             <div class="card-inner">
@@ -203,7 +207,7 @@
         <div class="product-item" data-id="alfajores">
           <div class="product-row" onclick="toggleProduct('alfajores')">
             <div class="product-row-right"><span class="product-name">עוגיות אלפחורס</span></div>
-            <div class="product-row-left"><span class="product-price">₪50</span><span class="expand-icon">&#8964;</span></div>
+            <div class="product-row-left"><span class="product-price">₪50</span><span class="expand-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"/></svg></span></div>
           </div>
           <div class="product-card" id="card-alfajores">
             <div class="card-inner">
@@ -228,7 +232,7 @@
         <div class="product-item" data-id="rugelach-kinder">
           <div class="product-row" onclick="toggleProduct('rugelach-kinder')">
             <div class="product-row-right"><span class="product-name">רוגלך נוטלה וקינדר</span></div>
-            <div class="product-row-left"><span class="product-price">₪60</span><span class="expand-icon">&#8964;</span></div>
+            <div class="product-row-left"><span class="product-price">₪60</span><span class="expand-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"/></svg></span></div>
           </div>
           <div class="product-card" id="card-rugelach-kinder">
             <div class="card-inner">
@@ -253,7 +257,7 @@
         <div class="product-item" data-id="rugelach-nutella">
           <div class="product-row" onclick="toggleProduct('rugelach-nutella')">
             <div class="product-row-right"><span class="product-name">רוגלך נוטלה</span></div>
-            <div class="product-row-left"><span class="product-price">₪55</span><span class="expand-icon">&#8964;</span></div>
+            <div class="product-row-left"><span class="product-price">₪55</span><span class="expand-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"/></svg></span></div>
           </div>
           <div class="product-card" id="card-rugelach-nutella">
             <div class="card-inner">
@@ -278,7 +282,7 @@
         <div class="product-item" data-id="choco-balls">
           <div class="product-row" onclick="toggleProduct('choco-balls')">
             <div class="product-row-right"><span class="product-name">כדורי שוקולד</span></div>
-            <div class="product-row-left"><span class="product-price">₪40</span><span class="expand-icon">&#8964;</span></div>
+            <div class="product-row-left"><span class="product-price">₪40</span><span class="expand-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"/></svg></span></div>
           </div>
           <div class="product-card" id="card-choco-balls">
             <div class="card-inner">
@@ -311,7 +315,7 @@
         <div class="product-item" data-id="jachnun-single">
           <div class="product-row" onclick="toggleProduct('jachnun-single')">
             <div class="product-row-right"><span class="product-name">ג׳חנון — יחידה בודדת</span></div>
-            <div class="product-row-left"><span class="product-price">₪9</span><span class="expand-icon">&#8964;</span></div>
+            <div class="product-row-left"><span class="product-price">₪9</span><span class="expand-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"/></svg></span></div>
           </div>
           <div class="product-card" id="card-jachnun-single">
             <div class="card-inner">
@@ -339,7 +343,7 @@
               <span class="product-name">ג׳חנון — 10 יחידות</span>
               <span class="product-tag">חיסכון</span>
             </div>
-            <div class="product-row-left"><span class="product-price">₪80</span><span class="expand-icon">&#8964;</span></div>
+            <div class="product-row-left"><span class="product-price">₪80</span><span class="expand-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"/></svg></span></div>
           </div>
           <div class="product-card" id="card-jachnun-10">
             <div class="card-inner">
@@ -364,6 +368,11 @@
       </div>
     </div>
   </main>
+
+  <!-- EDITORIAL QUOTE -->
+  <section class="editorial-quote">
+    <blockquote>״הסוד הוא בפשטות, בחומרי הגלם הכי טובים, ובסבלנות שלוקח לבצק לתפוח.״</blockquote>
+  </section>
 
   <!-- ORDER INFO BANNER -->
   <section class="order-info">
