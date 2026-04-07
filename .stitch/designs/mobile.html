@@ -1,0 +1,230 @@
+<!DOCTYPE html>
+
+<html class="light" dir="rtl" lang="he"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Serif+Hebrew:wght@400;700&amp;family=Assistant:wght@300;400;600;700&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<script id="tailwind-config">
+      tailwind.config = {
+        darkMode: "class",
+        theme: {
+          extend: {
+            "colors": {
+                    "on-tertiary-fixed": "#081b3b",
+                    "secondary-fixed": "#e4e2e1",
+                    "on-primary-fixed": "#261900",
+                    "primary": "#745a27",
+                    "secondary-fixed-dim": "#c8c6c6",
+                    "on-surface-variant": "#4d463a",
+                    "on-surface": "#1b1c18",
+                    "on-secondary": "#ffffff",
+                    "surface-container-low": "#f5f3ed",
+                    "inverse-on-surface": "#f3f1eb",
+                    "on-tertiary-container": "#314163",
+                    "on-background": "#1b1c18",
+                    "on-error-container": "#93000a",
+                    "inverse-surface": "#30312d",
+                    "surface-container": "#f0eee8",
+                    "on-error": "#ffffff",
+                    "surface-bright": "#fbf9f3",
+                    "surface-dim": "#dcdad4",
+                    "surface": "#fbf9f3",
+                    "secondary-container": "#e4e2e1",
+                    "on-secondary-fixed-variant": "#474747",
+                    "primary-fixed-dim": "#e4c285",
+                    "surface-container-high": "#eae8e2",
+                    "surface-container-lowest": "#ffffff",
+                    "inverse-primary": "#e4c285",
+                    "tertiary-fixed": "#d8e2ff",
+                    "background": "#fbf9f3",
+                    "on-primary-fixed-variant": "#5a4312",
+                    "on-primary": "#ffffff",
+                    "on-tertiary-fixed-variant": "#374669",
+                    "outline": "#7f7668",
+                    "error-container": "#ffdad6",
+                    "tertiary": "#4e5e82",
+                    "on-tertiary": "#ffffff",
+                    "surface-container-highest": "#e4e2dd",
+                    "secondary": "#5f5e5e",
+                    "tertiary-container": "#9dadd5",
+                    "tertiary-fixed-dim": "#b6c6ef",
+                    "on-primary-container": "#543d0c",
+                    "error": "#ba1a1a",
+                    "primary-fixed": "#ffdea4",
+                    "surface-variant": "#e4e2dd",
+                    "outline-variant": "#d0c5b5",
+                    "on-secondary-container": "#656464",
+                    "on-secondary-fixed": "#1b1c1c",
+                    "primary-container": "#c9a96e",
+                    "surface-tint": "#745a27"
+            },
+            "borderRadius": {
+                    "DEFAULT": "0.125rem",
+                    "lg": "0.25rem",
+                    "xl": "0.5rem",
+                    "full": "0.75rem"
+            },
+            "fontFamily": {
+                    "headline": ["Noto Serif Hebrew", "serif"],
+                    "body": ["Assistant", "sans-serif"],
+                    "label": ["Assistant", "sans-serif"]
+            }
+          },
+        },
+      }
+    </script>
+<style>
+        body { font-family: 'Assistant', sans-serif; background-color: #fbf9f3; color: #1b1c18; }
+        .serif-text { font-family: 'Noto Serif Hebrew', serif; }
+        .material-symbols-outlined { font-variation-settings: 'FILL' 0, 'wght' 300, 'GRAD' 0, 'opsz' 24; vertical-align: middle; }
+    </style>
+<style>
+    body {
+      min-height: max(884px, 100dvh);
+    }
+  </style>
+  </head>
+<body class="bg-background text-on-background selection:bg-primary-container/30">
+<!-- TopAppBar -->
+<nav class="flex flex-row-reverse justify-between items-center w-full px-6 py-4 docked full-width top-0 sticky z-50 bg-[#fbf9f3] dark:bg-[#1b1c18] backdrop-blur-md bg-opacity-80">
+<h1 class="font-['Noto_Serif_Hebrew'] text-2xl font-bold text-[#1b1c18] dark:text-[#fbf9f3]">pudin.</h1>
+<div class="flex items-center gap-4">
+<button class="text-[#745a27] dark:text-[#c9a96e] hover:opacity-70 transition-opacity active:scale-95 duration-200">
+<span class="material-symbols-outlined" data-icon="shopping_bag">shopping_bag</span>
+</button>
+<button class="text-[#745a27] dark:text-[#c9a96e] hover:opacity-70 transition-opacity active:scale-95 duration-200">
+<span class="material-symbols-outlined" data-icon="menu">menu</span>
+</button>
+</div>
+</nav>
+<main class="min-h-screen pb-24">
+<!-- Hero Section -->
+<section class="px-6 py-12 md:py-20 text-right">
+<h2 class="serif-text text-5xl md:text-7xl font-bold text-on-surface leading-tight tracking-tight mb-4">
+                מאפים ביתיים מהלב
+            </h2>
+<p class="text-secondary text-lg md:text-xl font-light leading-relaxed max-w-xs md:max-w-md">
+                מוכנים בהזמנה מראש · איסוף עצמי או משלוח
+            </p>
+<div class="mt-8 flex justify-end">
+<div class="w-24 h-0.5 bg-primary-container"></div>
+</div>
+</section>
+<!-- Order Info Banner -->
+<section class="px-6 mb-16">
+<div class="bg-surface-container-low p-6 flex flex-col md:flex-row-reverse justify-between items-center gap-6">
+<div class="text-right">
+<p class="text-on-surface-variant font-semibold text-lg serif-text">הזמנות עד 3 ימים מראש</p>
+<p class="text-secondary text-sm">אנחנו אופים במיוחד בשבילכם, כדי להבטיח טריות מקסימלית</p>
+</div>
+<button class="w-full md:w-auto bg-primary text-on-primary px-8 py-3 flex items-center justify-center gap-2 rounded-sm font-semibold active:scale-95 transition-all">
+<span class="material-symbols-outlined text-xl" data-icon="chat">chat</span>
+<span>הזמינו ב-WhatsApp</span>
+</button>
+</div>
+</section>
+<!-- Product Menu Section -->
+<section class="px-6 mb-12">
+<h3 class="serif-text text-3xl mb-8 text-right font-bold text-on-surface border-b border-outline-variant/15 pb-4">התפריט</h3>
+<div class="space-y-2">
+<!-- Product Row 1 -->
+<div class="flex justify-between items-center py-5 border-b border-outline-variant/10 hover:bg-surface-container-low transition-colors px-2">
+<div class="flex items-center gap-4">
+<span class="text-primary-container font-serif font-bold text-lg">₪45</span>
+<span class="material-symbols-outlined text-secondary text-sm" data-icon="add">add</span>
+</div>
+<span class="text-lg font-medium text-on-surface">טירמיסו קלאסי</span>
+</div>
+<!-- Product Row 2 -->
+<div class="flex justify-between items-center py-5 border-b border-outline-variant/10 hover:bg-surface-container-low transition-colors px-2">
+<div class="flex items-center gap-4">
+<span class="text-primary-container font-serif font-bold text-lg">₪38</span>
+<span class="material-symbols-outlined text-secondary text-sm" data-icon="add">add</span>
+</div>
+<span class="text-lg font-medium text-on-surface">שמרים קינמון וסוכר חום</span>
+</div>
+<!-- Expanded Product Card (The Selected Item) -->
+<div class="my-6 bg-surface-container-lowest overflow-hidden">
+<div class="relative h-64 w-full">
+<img alt="עוגת שמרים שוקולד" class="w-full h-full object-cover" data-alt="Close-up of a rich artisanal chocolate swirl yeast cake on a marble surface with soft natural lighting and flour dusting" src="https://lh3.googleusercontent.com/aida-public/AB6AXuAWySJqdtKkX56VikAeKJdn7XUc0RDyAdsSI8fb8r5ox2KWaID_e4el2ovndjEw_DPdQcygJ5m687sWoZXOMQ_3qOkqq4Wl0C8SL1xpvE2qpltGPAKTsv_MV9ixXWXcVa_7Haa3fShYyRzL7oPQmv7V_Yxh7JSYH4iGGTFvTefLzqt64BTYK-GGps2U-nD3ZuddrSm9dLFnjUxed_bEKC4uHw4c3mN3RwkPGNBjhVFUXEFyLzHX6E4JRRbcUGDbkQHsmtxb6d5Hx3w"/>
+<div class="absolute top-4 right-4 bg-primary text-on-primary px-3 py-1 text-xs font-bold tracking-widest uppercase">
+                            מומלץ
+                        </div>
+</div>
+<div class="p-6 text-right">
+<div class="flex justify-between items-start mb-2">
+<span class="text-primary-container font-serif font-bold text-2xl">₪52</span>
+<h4 class="serif-text text-2xl font-bold text-on-surface">עוגת שמרים שוקולד</h4>
+</div>
+<p class="text-secondary leading-relaxed mb-8">
+                            בצק חמאה עשיר שקופל שוב ושוב, במילוי שוקולד מריר איכותי וקראנץ׳ אגוזי לוז. נאפה בכל בוקר מחדש.
+                        </p>
+<div class="flex flex-row-reverse items-center justify-between gap-4">
+<div class="flex items-center border border-outline-variant/30 rounded-sm">
+<button class="px-4 py-2 text-primary hover:bg-surface-container-low transition-colors">
+<span class="material-symbols-outlined" data-icon="remove">remove</span>
+</button>
+<span class="px-4 font-bold text-on-surface">1</span>
+<button class="px-4 py-2 text-primary hover:bg-surface-container-low transition-colors">
+<span class="material-symbols-outlined" data-icon="add">add</span>
+</button>
+</div>
+<button class="flex-1 bg-primary text-on-primary py-3 px-6 rounded-sm font-bold active:scale-95 transition-all">
+                                הוסף לסל
+                            </button>
+</div>
+</div>
+</div>
+<!-- Product Row 4 -->
+<div class="flex justify-between items-center py-5 border-b border-outline-variant/10 hover:bg-surface-container-low transition-colors px-2">
+<div class="flex items-center gap-4">
+<span class="text-primary-container font-serif font-bold text-lg">₪24</span>
+<span class="material-symbols-outlined text-secondary text-sm" data-icon="add">add</span>
+</div>
+<span class="text-lg font-medium text-on-surface">מארז מקרונים (6 יח׳)</span>
+</div>
+</div>
+</section>
+<!-- Aesthetic Pull Quote/Editorial -->
+<section class="px-10 py-16 text-center italic text-secondary-container-on font-serif text-xl opacity-80 leading-relaxed">
+            “הסוד הוא בפשטות, בחומרי הגלם הכי טובים, ובסבלנות שלוקח לבצק לתפוח.”
+        </section>
+</main>
+<!-- Footer -->
+<footer class="w-full mt-auto py-12 px-8 bg-[#f5f3ed] dark:bg-[#1b1c18] flex flex-col items-end w-full text-right">
+<span class="font-['Noto_Serif_Hebrew'] text-xl mb-4 block font-bold text-on-surface">pudin.</span>
+<div class="space-y-2 mb-8 font-['Assistant'] text-sm leading-relaxed text-[#5f5e5e]">
+<p>רחוב המאפים 12, תל אביב</p>
+<p>050-1234567</p>
+<p>hi@pudin.co.il</p>
+</div>
+<div class="flex flex-row-reverse gap-6 mb-8">
+<a class="text-[#5f5e5e] hover:text-[#745a27] transition-colors" href="#">צור קשר</a>
+<a class="text-[#5f5e5e] hover:text-[#745a27] transition-colors" href="#">מדיניות משלוחים</a>
+<a class="text-[#5f5e5e] hover:text-[#745a27] transition-colors" href="#">תקנון</a>
+</div>
+<p class="text-[#5f5e5e] text-xs opacity-60">כל הזכויות שמורות לפודין. מאת זיו בכר</p>
+</footer>
+<!-- BottomNavBar -->
+<nav class="fixed bottom-0 left-0 w-full flex flex-row-reverse justify-around items-center pb-safe pt-2 backdrop-blur-xl bg-[#fbf9f3]/80 dark:bg-[#1b1c18]/80 z-50 border-t border-[#d0c5b5]/15">
+<a class="flex flex-col items-center justify-center text-[#745a27] dark:text-[#c9a96e] font-bold scale-95 transition-all duration-300" href="#">
+<span class="material-symbols-outlined" data-icon="home" style="font-variation-settings: 'FILL' 1;">home</span>
+<span class="font-['Assistant'] text-[10px] uppercase tracking-wider mt-1">דף הבית</span>
+</a>
+<a class="flex flex-col items-center justify-center text-[#5f5e5e] dark:text-[#d0c5b5] hover:bg-[#f5f3ed] dark:hover:bg-[#1b1c18] transition-all" href="#">
+<span class="material-symbols-outlined" data-icon="restaurant_menu">restaurant_menu</span>
+<span class="font-['Assistant'] text-[10px] uppercase tracking-wider mt-1">תפריט</span>
+</a>
+<a class="flex flex-col items-center justify-center text-[#5f5e5e] dark:text-[#d0c5b5] hover:bg-[#f5f3ed] dark:hover:bg-[#1b1c18] transition-all" href="#">
+<span class="material-symbols-outlined" data-icon="receipt_long">receipt_long</span>
+<span class="font-['Assistant'] text-[10px] uppercase tracking-wider mt-1">הזמנות</span>
+</a>
+<a class="flex flex-col items-center justify-center text-[#5f5e5e] dark:text-[#d0c5b5] hover:bg-[#f5f3ed] dark:hover:bg-[#1b1c18] transition-all" href="#">
+<span class="material-symbols-outlined" data-icon="person">person</span>
+<span class="font-['Assistant'] text-[10px] uppercase tracking-wider mt-1">פרופיל</span>
+</a>
+</nav>
+</body></html>
