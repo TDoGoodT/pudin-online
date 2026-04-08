@@ -6,48 +6,75 @@ const STRIP_H   = 56;    // px — collapsed strip height
 const ZONE_H    = () => Math.round(window.innerHeight * 0.9);
 
 // Progress thresholds
-const DESC_SHOW_AT  = 0.72;  // description + button fade in after 72% expanded
-const IMAGE_START   = 0.08;  // image starts revealing at 8% progress
-const SCALE_MIN     = 0.97;  // slight scale-down for collapsed-adjacent cards
+const DESC_SHOW_AT = 0.72;  // description + button fade in after 72% expanded
+const IMAGE_START  = 0.08;  // image starts revealing at 8% progress
 
 // ========================
 // ELEMENTS
 // ========================
-const cards = Array.from(document.querySelectorAll('.stack-card'));
-const pills  = Array.from(document.querySelectorAll('.cat-pill'));
-const cart   = {};
+const allCards = Array.from(document.querySelectorAll('.stack-card'));
+const pills    = Array.from(document.querySelectorAll('.cat-pill'));
+const cart     = {};
 
 // ========================
-// CORE — scroll-driven layout
-//
-// Each card has a "zone" — a window.scrollY range.
-// Before zone: card is off-screen below (pending).
-// Inside zone: card is the active expanding/contracting card.
-// After zone:  card is collapsed to a STRIP_H strip, stacked at top below header.
-//
-// Within the active zone we compute progress [0..1]:
-//   0 = bottom of zone (just arrived, slim bar)
-//   1 = top of zone (fully expanded)
-//
-// progress drives everything via CSS custom properties on the element.
+// CATEGORY STATE
+// visibleCards = the currently-filtered subset, in DOM order
 // ========================
+let activeCategory = allCards[0]?.dataset.category ?? null;
+let visibleCards   = allCards.filter(c => c.dataset.category === activeCategory);
 
-function getZoneStart(i) { return i * ZONE_H(); }
-function getZoneEnd(i)   { return (i + 1) * ZONE_H(); }
-
-// easeInOutCubic — makes the expansion feel physical
+// ========================
+// HELPERS
+// ========================
 function ease(t) {
   return t < 0.5 ? 4 * t * t * t : 1 - Math.pow(-2 * t + 2, 3) / 2;
 }
-
 function clamp(v, lo, hi) { return Math.max(lo, Math.min(hi, v)); }
 
+function getZoneStart(i) { return i * ZONE_H(); }
+
+// ========================
+// SHOW / HIDE CATEGORIES
+// Filters visible cards, resets scroll, rebuilds layout
+// ========================
+function setCategory(category) {
+  activeCategory = category;
+  visibleCards   = allCards.filter(c => c.dataset.category === category);
+
+  // Hide all, then show only the new visible set
+  allCards.forEach(card => {
+    const inCategory = card.dataset.category === category;
+    card.classList.toggle('cat-hidden', !inCategory);
+    // Reset all state on hidden cards
+    if (!inCategory) {
+      card.style.top = '100vh';
+      card.style.setProperty('--progress', '0');
+      card.style.setProperty('--img-reveal', '0');
+      card.style.setProperty('--content-opacity', '0');
+      card.style.setProperty('--card-opacity', '0');
+      card.classList.remove('is-collapsed', 'is-active', 'is-pending');
+    }
+  });
+
+  setPageHeight();
+
+  // Scroll to start of new category (instant — smooth would feel sluggish here)
+  window.scrollTo({ top: 0, behavior: 'instant' });
+
+  updateLayout();
+  syncActivePill();
+}
+
+// ========================
+// CORE — scroll-driven layout
+// Operates only on visibleCards
+// ========================
 function updateLayout() {
-  const sy    = window.scrollY;
-  const zone  = ZONE_H();
+  const sy   = window.scrollY;
+  const zone = ZONE_H();
   let collapsedCount = 0;
 
-  cards.forEach((card, i) => {
+  visibleCards.forEach((card, i) => {
     const zStart = i * zone;
     const zEnd   = (i + 1) * zone;
 
@@ -60,32 +87,25 @@ function updateLayout() {
     card.classList.toggle('is-active',    isActive);
 
     if (isCollapsed) {
-      // Stack at top below header — each collapsed card adds STRIP_H
       card.style.top = (HEADER_H + collapsedCount * STRIP_H) + 'px';
-      card.style.setProperty('--progress', '0');
-      card.style.setProperty('--img-reveal', '0');
+      card.style.setProperty('--progress',        '0');
+      card.style.setProperty('--img-reveal',      '0');
       card.style.setProperty('--content-opacity', '0');
-      card.style.setProperty('--card-opacity', '1');
+      card.style.setProperty('--card-opacity',    '1');
       collapsedCount++;
     } else if (isPending) {
       card.style.top = '100vh';
-      card.style.setProperty('--progress', '0');
-      card.style.setProperty('--img-reveal', '0');
+      card.style.setProperty('--progress',        '0');
+      card.style.setProperty('--img-reveal',      '0');
       card.style.setProperty('--content-opacity', '0');
-      card.style.setProperty('--card-opacity', '0.5');
+      card.style.setProperty('--card-opacity',    '0.5');
     } else {
-      // Active card — compute continuous progress
-      const rawProgress = clamp((sy - zStart) / zone, 0, 1);
-      const progress    = ease(rawProgress);
-
-      // Image reveal: starts at IMAGE_START progress, reaches 1 at progress=1
-      const imgReveal = clamp((rawProgress - IMAGE_START) / (1 - IMAGE_START), 0, 1);
-
-      // Content (desc + button): fades in only in upper portion
+      // Active — compute continuous progress
+      const rawProgress    = clamp((sy - zStart) / zone, 0, 1);
+      const progress       = ease(rawProgress);
+      const imgReveal      = clamp((rawProgress - IMAGE_START) / (1 - IMAGE_START), 0, 1);
       const contentOpacity = clamp((rawProgress - DESC_SHOW_AT) / (1 - DESC_SHOW_AT), 0, 1);
-
-      // Strip opacity: as card expands, the collapsed strip fades out
-      const cardOpacity = 0.55 + progress * 0.45;
+      const cardOpacity    = 0.55 + progress * 0.45;
 
       card.style.top = (HEADER_H + collapsedCount * STRIP_H) + 'px';
       card.style.setProperty('--progress',        progress.toFixed(4));
@@ -94,31 +114,22 @@ function updateLayout() {
       card.style.setProperty('--card-opacity',    cardOpacity.toFixed(4));
     }
   });
-
-  syncActivePill();
 }
 
 // ========================
-// PAGE HEIGHT
+// PAGE HEIGHT — based on visible cards only
 // ========================
 function setPageHeight() {
   const zone  = ZONE_H();
   const stack = document.getElementById('productStack');
-  stack.style.height = (cards.length * zone + window.innerHeight) + 'px';
+  stack.style.height = (visibleCards.length * zone + window.innerHeight) + 'px';
 }
 
 // ========================
 // CATEGORY PILL SYNC
 // ========================
 function syncActivePill() {
-  let activeCat = null;
-  for (const card of cards) {
-    if (card.classList.contains('is-active')) {
-      activeCat = card.dataset.category;
-      break;
-    }
-  }
-  pills.forEach(p => p.classList.toggle('active', p.dataset.category === activeCat));
+  pills.forEach(p => p.classList.toggle('active', p.dataset.category === activeCategory));
 }
 
 // ========================
@@ -127,10 +138,8 @@ function syncActivePill() {
 function initCategoryNav() {
   pills.forEach(pill => {
     pill.addEventListener('click', () => {
-      const category = pill.dataset.category;
-      const idx = cards.findIndex(c => c.dataset.category === category);
-      if (idx < 0) return;
-      window.scrollTo({ top: getZoneStart(idx), behavior: 'smooth' });
+      if (pill.dataset.category === activeCategory) return;
+      setCategory(pill.dataset.category);
     });
   });
 }
@@ -139,9 +148,12 @@ function initCategoryNav() {
 // COLLAPSED STRIP CLICKS
 // ========================
 function initStripClicks() {
-  cards.forEach((card, i) => {
+  allCards.forEach((card, i) => {
     card.querySelector('.card-collapsed').addEventListener('click', () => {
-      window.scrollTo({ top: getZoneStart(i), behavior: 'smooth' });
+      // Find this card's index within visibleCards
+      const vi = visibleCards.indexOf(card);
+      if (vi < 0) return;
+      window.scrollTo({ top: getZoneStart(vi), behavior: 'smooth' });
     });
   });
 }
@@ -264,6 +276,7 @@ function init() {
   updateLayout();
   initStripClicks();
   initCategoryNav();
+  syncActivePill();
   renderCart();
 
   window.addEventListener('scroll', updateLayout, { passive: true });
