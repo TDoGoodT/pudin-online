@@ -1,103 +1,124 @@
 // ========================
 // CONSTANTS
 // ========================
-const HEADER_H = 108;
-const STRIP_H  = 64;
+const HEADER_H  = 108;   // px — must match CSS --header-h
+const STRIP_H   = 56;    // px — collapsed strip height
+const ZONE_H    = () => Math.round(window.innerHeight * 0.9);
+
+// Progress thresholds
+const DESC_SHOW_AT  = 0.72;  // description + button fade in after 72% expanded
+const IMAGE_START   = 0.08;  // image starts revealing at 8% progress
+const SCALE_MIN     = 0.97;  // slight scale-down for collapsed-adjacent cards
 
 // ========================
-// STATE
+// ELEMENTS
 // ========================
-const cart = {};
 const cards = Array.from(document.querySelectorAll('.stack-card'));
-
-// naturalTop[i] = offsetTop of card i in normal document flow (no sticky)
-let naturalTops = [];
+const pills  = Array.from(document.querySelectorAll('.cat-pill'));
+const cart   = {};
 
 // ========================
-// MEASURE NATURAL POSITIONS
-// Temporarily make everything relative so we get true document offsets
+// CORE — scroll-driven layout
+//
+// Each card has a "zone" — a window.scrollY range.
+// Before zone: card is off-screen below (pending).
+// Inside zone: card is the active expanding/contracting card.
+// After zone:  card is collapsed to a STRIP_H strip, stacked at top below header.
+//
+// Within the active zone we compute progress [0..1]:
+//   0 = bottom of zone (just arrived, slim bar)
+//   1 = top of zone (fully expanded)
+//
+// progress drives everything via CSS custom properties on the element.
 // ========================
-function measureNaturalTops() {
-  // Save and clear sticky
-  cards.forEach(c => {
-    c.style.position = 'relative';
-    c.style.top = '0px';
-  });
 
-  naturalTops = cards.map(c => {
-    let el = c;
-    let top = 0;
-    while (el) {
-      top += el.offsetTop;
-      el = el.offsetParent;
-    }
-    return top;
-  });
+function getZoneStart(i) { return i * ZONE_H(); }
+function getZoneEnd(i)   { return (i + 1) * ZONE_H(); }
 
-  // Restore sticky
-  cards.forEach(c => {
-    c.style.position = '';
-    c.style.top = '';
-  });
+// easeInOutCubic — makes the expansion feel physical
+function ease(t) {
+  return t < 0.5 ? 4 * t * t * t : 1 - Math.pow(-2 * t + 2, 3) / 2;
 }
 
-// ========================
-// LAYOUT UPDATE
-// Called on every scroll tick
-// ========================
+function clamp(v, lo, hi) { return Math.max(lo, Math.min(hi, v)); }
+
 function updateLayout() {
-  const scrollY = window.scrollY;
-  let collapsedBefore = 0; // strips stacked above current card
+  const sy    = window.scrollY;
+  const zone  = ZONE_H();
+  let collapsedCount = 0;
 
   cards.forEach((card, i) => {
-    // This card collapses once the user has scrolled past it entirely.
-    // "Past it" means: scroll position has brought the NEXT card's natural top
-    // up to the bottom edge of the sticky zone (header + existing strips).
-    //
-    // Collapse condition: there is a next card AND
-    //   scrollY + HEADER_H + collapsedBefore * STRIP_H >= naturalTops[i+1]
-    //
-    // Which rearranges to:
-    //   scrollY >= naturalTops[i+1] - HEADER_H - collapsedBefore * STRIP_H
+    const zStart = i * zone;
+    const zEnd   = (i + 1) * zone;
 
-    let shouldCollapse = false;
-    if (i < cards.length - 1) {
-      const collapseAt = naturalTops[i + 1] - HEADER_H - collapsedBefore * STRIP_H;
-      shouldCollapse = scrollY >= collapseAt;
+    const isCollapsed = sy >= zEnd;
+    const isPending   = sy < zStart;
+    const isActive    = !isCollapsed && !isPending;
+
+    card.classList.toggle('is-collapsed', isCollapsed);
+    card.classList.toggle('is-pending',   isPending);
+    card.classList.toggle('is-active',    isActive);
+
+    if (isCollapsed) {
+      // Stack at top below header — each collapsed card adds STRIP_H
+      card.style.top = (HEADER_H + collapsedCount * STRIP_H) + 'px';
+      card.style.setProperty('--progress', '0');
+      card.style.setProperty('--img-reveal', '0');
+      card.style.setProperty('--content-opacity', '0');
+      card.style.setProperty('--card-opacity', '1');
+      collapsedCount++;
+    } else if (isPending) {
+      card.style.top = '100vh';
+      card.style.setProperty('--progress', '0');
+      card.style.setProperty('--img-reveal', '0');
+      card.style.setProperty('--content-opacity', '0');
+      card.style.setProperty('--card-opacity', '0.5');
+    } else {
+      // Active card — compute continuous progress
+      const rawProgress = clamp((sy - zStart) / zone, 0, 1);
+      const progress    = ease(rawProgress);
+
+      // Image reveal: starts at IMAGE_START progress, reaches 1 at progress=1
+      const imgReveal = clamp((rawProgress - IMAGE_START) / (1 - IMAGE_START), 0, 1);
+
+      // Content (desc + button): fades in only in upper portion
+      const contentOpacity = clamp((rawProgress - DESC_SHOW_AT) / (1 - DESC_SHOW_AT), 0, 1);
+
+      // Strip opacity: as card expands, the collapsed strip fades out
+      const cardOpacity = 0.55 + progress * 0.45;
+
+      card.style.top = (HEADER_H + collapsedCount * STRIP_H) + 'px';
+      card.style.setProperty('--progress',        progress.toFixed(4));
+      card.style.setProperty('--img-reveal',      imgReveal.toFixed(4));
+      card.style.setProperty('--content-opacity', contentOpacity.toFixed(4));
+      card.style.setProperty('--card-opacity',    cardOpacity.toFixed(4));
     }
-
-    card.classList.toggle('is-collapsed', shouldCollapse);
-
-    // Sticky top for this card = header + strips stacked above it
-    card.style.top = (HEADER_H + collapsedBefore * STRIP_H) + 'px';
-
-    if (shouldCollapse) collapsedBefore++;
   });
 
   syncActivePill();
 }
 
 // ========================
+// PAGE HEIGHT
+// ========================
+function setPageHeight() {
+  const zone  = ZONE_H();
+  const stack = document.getElementById('productStack');
+  stack.style.height = (cards.length * zone + window.innerHeight) + 'px';
+}
+
+// ========================
 // CATEGORY PILL SYNC
 // ========================
-const pills = Array.from(document.querySelectorAll('.cat-pill'));
-
 function syncActivePill() {
-  // The "active" card is the first non-collapsed one
-  let activeCategory = null;
+  let activeCat = null;
   for (const card of cards) {
-    if (!card.classList.contains('is-collapsed')) {
-      activeCategory = card.dataset.category;
+    if (card.classList.contains('is-active')) {
+      activeCat = card.dataset.category;
       break;
     }
   }
-  if (!activeCategory) {
-    activeCategory = cards[cards.length - 1]?.dataset.category;
-  }
-
-  pills.forEach(p => {
-    p.classList.toggle('active', p.dataset.category === activeCategory);
-  });
+  pills.forEach(p => p.classList.toggle('active', p.dataset.category === activeCat));
 }
 
 // ========================
@@ -107,29 +128,20 @@ function initCategoryNav() {
   pills.forEach(pill => {
     pill.addEventListener('click', () => {
       const category = pill.dataset.category;
-      const targetIdx = cards.findIndex(c => c.dataset.category === category);
-      if (targetIdx < 0) return;
-
-      // Scroll so that card[targetIdx] becomes the first non-collapsed card.
-      // At that scroll position: scrollY = naturalTops[targetIdx] - HEADER_H - (cards before it that'll be collapsed) * STRIP_H
-      // But we want it just at the threshold where it's NOT collapsed yet,
-      // so scroll to naturalTops[targetIdx] - HEADER_H - (targetIdx) * STRIP_H
-      // Actually: use targetIdx as collapsedBefore since all previous cards collapse
-      const scrollTo = naturalTops[targetIdx] - HEADER_H - targetIdx * STRIP_H;
-      window.scrollTo({ top: Math.max(0, scrollTo), behavior: 'smooth' });
+      const idx = cards.findIndex(c => c.dataset.category === category);
+      if (idx < 0) return;
+      window.scrollTo({ top: getZoneStart(idx), behavior: 'smooth' });
     });
   });
 }
 
 // ========================
-// COLLAPSED STRIP CLICKS — tap to go back to that card
+// COLLAPSED STRIP CLICKS
 // ========================
 function initStripClicks() {
   cards.forEach((card, i) => {
     card.querySelector('.card-collapsed').addEventListener('click', () => {
-      // Scroll to just before this card collapses — i.e. just before next card's threshold
-      const scrollTo = naturalTops[i] - HEADER_H - i * STRIP_H;
-      window.scrollTo({ top: Math.max(0, scrollTo - 1), behavior: 'smooth' });
+      window.scrollTo({ top: getZoneStart(i), behavior: 'smooth' });
     });
   });
 }
@@ -140,8 +152,8 @@ function initStripClicks() {
 document.addEventListener('click', e => {
   const btn = e.target.closest('.qty-btn');
   if (!btn) return;
-  const id = btn.dataset.id;
-  const el = document.getElementById(`qty-${id}`);
+  const id  = btn.dataset.id;
+  const el  = document.getElementById(`qty-${id}`);
   if (!el) return;
   let val = parseInt(el.textContent) + (btn.dataset.action === 'plus' ? 1 : -1);
   el.textContent = Math.max(1, Math.min(99, val));
@@ -162,24 +174,14 @@ document.addEventListener('click', e => {
   const name  = btn.dataset.name;
   const price = parseInt(btn.dataset.price);
   const qty   = getQty(id);
-
-  if (cart[id]) {
-    cart[id].qty += qty;
-  } else {
-    cart[id] = { name, price, qty };
-  }
-
+  if (cart[id]) { cart[id].qty += qty; } else { cart[id] = { name, price, qty }; }
   const qtyEl = document.getElementById(`qty-${id}`);
   if (qtyEl) qtyEl.textContent = '1';
-
   renderCart();
   showToast(`${name} נוסף לסל`);
 });
 
-function removeFromCart(id) {
-  delete cart[id];
-  renderCart();
-}
+function removeFromCart(id) { delete cart[id]; renderCart(); }
 
 // ========================
 // CART — RENDER
@@ -190,10 +192,9 @@ function renderCart() {
   const totalEl     = document.getElementById('cartTotal');
   const countEl     = document.getElementById('cartCount');
   const checkoutBtn = document.getElementById('checkoutBtn');
-
-  const ids        = Object.keys(cart);
-  const totalItems = ids.reduce((s, id) => s + cart[id].qty, 0);
-  const totalPrice = ids.reduce((s, id) => s + cart[id].price * cart[id].qty, 0);
+  const ids         = Object.keys(cart);
+  const totalItems  = ids.reduce((s, id) => s + cart[id].qty, 0);
+  const totalPrice  = ids.reduce((s, id) => s + cart[id].price * cart[id].qty, 0);
 
   countEl.textContent = totalItems;
   countEl.classList.toggle('visible', totalItems > 0);
@@ -203,22 +204,18 @@ function renderCart() {
     footerEl.style.display = 'none';
     return;
   }
-
   footerEl.style.display = 'flex';
   totalEl.textContent = `₪${totalPrice}`;
-
   itemsEl.innerHTML = ids.map(id => {
     const item = cart[id];
-    return `
-      <div class="cart-line">
-        <div class="cart-line-info">
-          <div class="cart-line-name">${item.name}</div>
-          <div class="cart-line-meta">${item.qty} × ₪${item.price}</div>
-        </div>
-        <span class="cart-line-price">₪${item.price * item.qty}</span>
-        <button class="cart-line-remove" onclick="removeFromCart('${id}')" aria-label="הסר">✕</button>
+    return `<div class="cart-line">
+      <div class="cart-line-info">
+        <div class="cart-line-name">${item.name}</div>
+        <div class="cart-line-meta">${item.qty} × ₪${item.price}</div>
       </div>
-    `;
+      <span class="cart-line-price">₪${item.price * item.qty}</span>
+      <button class="cart-line-remove" onclick="removeFromCart('${id}')" aria-label="הסר">✕</button>
+    </div>`;
   }).join('');
 
   let msg = 'שלום זיו! אשמח להזמין:\n\n';
@@ -243,7 +240,6 @@ function closeCart() {
   document.getElementById('cartOverlay').classList.remove('active');
   document.body.style.overflow = '';
 }
-
 document.getElementById('floatCart').addEventListener('click', openCart);
 document.getElementById('cartClose').addEventListener('click', closeCart);
 document.getElementById('cartOverlay').addEventListener('click', closeCart);
@@ -264,22 +260,17 @@ function showToast(msg) {
 // INIT
 // ========================
 function init() {
+  setPageHeight();
+  updateLayout();
+  initStripClicks();
+  initCategoryNav();
   renderCart();
 
-  // Let fonts and layout fully render before measuring
-  requestAnimationFrame(() => {
-    requestAnimationFrame(() => {
-      measureNaturalTops();
-      initStripClicks();
-      initCategoryNav();
-      updateLayout();
-      window.addEventListener('scroll', updateLayout, { passive: true });
-      window.addEventListener('resize', () => {
-        measureNaturalTops();
-        updateLayout();
-      });
-    });
+  window.addEventListener('scroll', updateLayout, { passive: true });
+  window.addEventListener('resize', () => {
+    setPageHeight();
+    updateLayout();
   });
 }
 
-document.addEventListener('DOMContentLoaded', init);
+init();

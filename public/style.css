@@ -4,16 +4,16 @@
 *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 
 :root {
-  --cream:        #F5F3ED;
-  --cream-card:   #FAF8F4;
-  --cream-strip:  #EFEDE7;
-  --charcoal:     #1b1c18;
-  --muted:        #6b6860;
-  --gold:         #C9A96E;
-  --gold-line:    rgba(201,169,110,0.18);
-  --transition:   0.32s cubic-bezier(0.4,0,0.2,1);
-  --header-h:     108px; /* logo row + category nav */
-  --strip-h:      64px;
+  --cream:       #F5F3ED;
+  --cream-card:  #FAF8F4;
+  --cream-strip: #EFEDE7;
+  --charcoal:    #1b1c18;
+  --muted:       #6b6860;
+  --gold:        #C9A96E;
+  --gold-line:   rgba(201,169,110,0.18);
+  --transition:  0.3s cubic-bezier(0.4,0,0.2,1);
+  --header-h:    108px;
+  --strip-h:     56px;
 }
 
 html { scroll-behavior: smooth; }
@@ -21,31 +21,28 @@ html { scroll-behavior: smooth; }
 body {
   font-family: 'Assistant', sans-serif;
   font-weight: 300;
-  background: var(--cream);
+  background: var(--charcoal);
   color: var(--charcoal);
   direction: rtl;
   text-align: right;
-  min-height: 100vh;
   -webkit-font-smoothing: antialiased;
   overflow-x: hidden;
 }
 
 /* ========================
-   HEADER
+   HEADER — fixed at top
 ======================== */
 .header {
   position: fixed;
-  top: 0;
-  right: 0;
-  left: 0;
-  z-index: 100;
-  background: rgba(245,243,237,0.93);
+  top: 0; right: 0; left: 0;
+  z-index: 200;
+  background: rgba(245,243,237,0.95);
   backdrop-filter: blur(14px);
   -webkit-backdrop-filter: blur(14px);
   display: flex;
   flex-direction: column;
   align-items: center;
-  padding: 20px 0 0;
+  padding: 18px 0 0;
 }
 
 .logo {
@@ -53,22 +50,19 @@ body {
   flex-direction: column;
   align-items: center;
   gap: 2px;
-  margin-bottom: 14px;
+  margin-bottom: 12px;
 }
 .logo-main {
   font-family: 'Playfair Display', serif;
   font-style: italic;
-  font-size: 2rem;
   font-weight: 700;
+  font-size: 2rem;
   letter-spacing: -0.02em;
   color: var(--charcoal);
   line-height: 1;
 }
-.logo-main.small {
-  font-size: 1.1rem;
-}
+.logo-main.small { font-size: 1.1rem; }
 .logo-sub {
-  font-family: 'Assistant', sans-serif;
   font-size: 0.58rem;
   font-weight: 300;
   letter-spacing: 0.22em;
@@ -78,11 +72,10 @@ body {
 
 .category-nav {
   display: flex;
-  gap: 0;
-  width: 100%;
   justify-content: center;
-  padding: 0 24px 14px;
   gap: 28px;
+  width: 100%;
+  padding: 0 24px 12px;
   overflow-x: auto;
   scrollbar-width: none;
 }
@@ -110,28 +103,30 @@ body {
 .cat-pill:hover { color: var(--charcoal); }
 
 /* ========================
-   PRODUCT STACK
+   PRODUCT STACK — scroll spacer
 ======================== */
-.product-stack {
-  padding-top: var(--header-h);
-  /* extra bottom space so last card can fully scroll into view */
-  padding-bottom: 120px;
+#productStack {
+  width: 100%;
+  position: relative;
 }
 
-/* Each card is a sticky unit */
+/* ========================
+   STACK CARD — fixed, driven by JS
+======================== */
 .stack-card {
-  position: sticky;
-  /* top is set dynamically by JS based on how many strips are stacked */
-  top: var(--header-h);
-  /* ensure cards stack in DOM order */
-  z-index: 1;
+  position: fixed;
+  right: 0;
+  left: 0;
+  z-index: 10;
+  top: 100vh;
+  /* CSS custom properties set by JS */
+  --progress: 0;
+  --img-reveal: 0;
+  --content-opacity: 0;
+  --card-opacity: 0.55;
+  opacity: var(--card-opacity);
+  will-change: top, opacity;
 }
-
-/* When a card is collapsed (scrolled past), show the thin strip */
-.stack-card.is-collapsed .card-collapsed { display: flex; }
-.stack-card.is-collapsed .card-full     { display: none; }
-.stack-card:not(.is-collapsed) .card-collapsed { display: none; }
-.stack-card:not(.is-collapsed) .card-full      { display: block; }
 
 /* ========================
    COLLAPSED STRIP
@@ -144,6 +139,7 @@ body {
   justify-content: space-between;
   padding: 0 24px;
   cursor: pointer;
+  border-bottom: 1px solid var(--gold-line);
   transition: background var(--transition);
 }
 .card-collapsed:hover { background: #e8e5de; }
@@ -155,34 +151,64 @@ body {
   color: var(--charcoal);
 }
 .card-collapsed-price {
-  font-family: 'Assistant', sans-serif;
   font-size: 0.78rem;
   font-weight: 300;
   color: var(--muted);
 }
 
+/* collapsed cards: only show strip */
+.stack-card.is-collapsed .card-collapsed { display: flex; }
+.stack-card.is-collapsed .card-full      { display: none; }
+
+/* pending cards: hidden off-screen */
+.stack-card.is-pending .card-collapsed { display: none; }
+.stack-card.is-pending .card-full      { display: none; }
+
+/* active card: only the full card */
+.stack-card.is-active .card-collapsed { display: none; }
+.stack-card.is-active .card-full      { display: flex; }
+
 /* ========================
-   FULL CARD
+   FULL CARD — motion-driven
 ======================== */
 .card-full {
   background: var(--cream-card);
-  min-height: calc(100svh - var(--header-h));
   display: flex;
   flex-direction: column;
+  /* Height driven by --progress: from STRIP_H up to (100vh - header - collapsed strips) */
+  /* JS sets top already, so height just needs to fill available space */
+  height: calc(100vh - var(--header-h));
+  overflow: hidden;
+  /* Subtle shadow grows as card expands */
+  box-shadow: 0 8px calc(20px + 20px * var(--progress)) rgba(27,28,24,calc(0.04 + 0.06 * var(--progress)));
 }
 
+/* ========================
+   IMAGE — curtain reveal
+   clip-path slides up as --img-reveal goes 0→1
+======================== */
 .card-image {
   width: 100%;
-  flex: 0 0 auto;
+  flex-shrink: 0;
   aspect-ratio: 4/5;
   overflow: hidden;
+  /* Reveal from top: starts hidden (inset bottom 100%), opens downward as reveal goes 0→1 */
+  clip-path: inset(0 0 calc(100% * (1 - var(--img-reveal))) 0);
+  /* Also scale up slightly from below */
+  transform: translateY(calc(24px * (1 - var(--img-reveal))));
+  transition: clip-path 0.01s linear, transform 0.01s linear;
+  will-change: clip-path, transform;
 }
+
 .image-placeholder {
   width: 100%;
   height: 100%;
   background: linear-gradient(160deg, #f0ede6 0%, #e2ddd3 100%);
 }
 
+/* ========================
+   CARD BODY
+======================== */
 .card-body {
   flex: 1;
   display: flex;
@@ -190,31 +216,38 @@ body {
   justify-content: space-between;
   padding: 28px 24px 32px;
   gap: 24px;
+  overflow-y: auto;
 }
-
 .card-body-top {
   display: flex;
   flex-direction: column;
   gap: 10px;
 }
 
+/* Title slides up and fades in with progress */
 .card-title {
   font-family: 'Noto Serif Hebrew', serif;
   font-size: clamp(1.4rem, 5vw, 1.9rem);
   font-weight: 400;
   color: var(--charcoal);
   line-height: 1.2;
-  letter-spacing: -0.01em;
+  opacity: calc(0.4 + 0.6 * var(--progress));
+  transform: translateY(calc(8px * (1 - var(--progress))));
+  transition: opacity 0.01s linear, transform 0.01s linear;
 }
 
+/* Description fades in late */
 .card-desc {
   font-size: 0.84rem;
   font-weight: 300;
   color: var(--muted);
   line-height: 1.8;
-  letter-spacing: 0.01em;
+  opacity: var(--content-opacity);
+  transform: translateY(calc(10px * (1 - var(--content-opacity))));
+  transition: opacity 0.01s linear, transform 0.01s linear;
 }
 
+/* Price appears with progress */
 .card-price {
   font-family: 'Noto Serif Hebrew', serif;
   font-size: 1.05rem;
@@ -222,15 +255,20 @@ body {
   color: var(--gold);
   display: block;
   margin-top: 4px;
+  opacity: calc(0.2 + 0.8 * var(--progress));
+  transition: opacity 0.01s linear;
 }
 
 /* ========================
-   CARD ACTIONS
+   CARD ACTIONS — fade in late
 ======================== */
 .card-actions {
   display: flex;
   flex-direction: column;
   gap: 12px;
+  opacity: var(--content-opacity);
+  transform: translateY(calc(12px * (1 - var(--content-opacity))));
+  transition: opacity 0.01s linear, transform 0.01s linear;
 }
 
 .qty-control {
@@ -247,23 +285,22 @@ body {
   font-size: 1.1rem;
   cursor: pointer;
   color: var(--charcoal);
-  transition: opacity var(--transition);
   display: flex;
   align-items: center;
   justify-content: center;
+  transition: opacity var(--transition);
 }
 .qty-btn:hover { opacity: 0.4; }
 .qty-val {
   width: 40px;
+  height: 40px;
   text-align: center;
   font-size: 0.9rem;
-  font-weight: 400;
-  border-right: 1px solid var(--gold-line);
-  border-left: 1px solid var(--gold-line);
-  height: 40px;
   display: flex;
   align-items: center;
   justify-content: center;
+  border-right: 1px solid var(--gold-line);
+  border-left: 1px solid var(--gold-line);
 }
 
 .add-btn {
@@ -277,10 +314,65 @@ body {
   font-weight: 400;
   letter-spacing: 0.14em;
   cursor: pointer;
-  transition: opacity var(--transition);
   text-align: center;
+  transition: opacity var(--transition);
 }
 .add-btn:hover { opacity: 0.78; }
+
+/* ========================
+   SITE FOOTER
+======================== */
+.site-footer {
+  background: var(--charcoal);
+  color: rgba(255,255,255,0.65);
+  padding: 56px 32px 48px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 20px;
+  text-align: center;
+  position: relative;
+  z-index: 5;
+}
+.order-info {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  font-size: 0.82rem;
+  font-weight: 300;
+  line-height: 1.7;
+  color: rgba(255,255,255,0.55);
+}
+.order-info strong {
+  color: rgba(255,255,255,0.9);
+  font-weight: 400;
+}
+.whatsapp-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  background: #25D366;
+  color: white;
+  text-decoration: none;
+  padding: 13px 28px;
+  font-family: 'Assistant', sans-serif;
+  font-size: 0.82rem;
+  font-weight: 400;
+  letter-spacing: 0.06em;
+  transition: opacity var(--transition);
+  margin-top: 8px;
+}
+.whatsapp-btn:hover { opacity: 0.85; }
+.footer-copy {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  font-size: 0.62rem;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: rgba(255,255,255,0.25);
+  margin-top: 16px;
+}
 
 /* ========================
    FLOATING CART
@@ -289,7 +381,7 @@ body {
   position: fixed;
   bottom: 28px;
   left: 24px;
-  z-index: 150;
+  z-index: 300;
   width: 52px;
   height: 52px;
   border-radius: 50%;
@@ -300,24 +392,22 @@ body {
   display: flex;
   align-items: center;
   justify-content: center;
-  box-shadow: 0 4px 24px rgba(27,28,24,0.22);
+  box-shadow: 0 4px 24px rgba(27,28,24,0.28);
   transition: transform var(--transition), box-shadow var(--transition);
 }
 .float-cart:hover {
   transform: translateY(-2px);
-  box-shadow: 0 8px 32px rgba(27,28,24,0.28);
+  box-shadow: 0 8px 32px rgba(27,28,24,0.36);
 }
 
 .float-cart-count {
   position: absolute;
-  top: 6px;
-  right: 6px;
+  top: 6px; right: 6px;
   background: var(--gold);
   color: #fff;
   font-size: 0.58rem;
   font-weight: 600;
-  width: 16px;
-  height: 16px;
+  width: 16px; height: 16px;
   border-radius: 50%;
   display: flex;
   align-items: center;
@@ -326,10 +416,7 @@ body {
   transform: scale(0.4);
   transition: opacity var(--transition), transform var(--transition);
 }
-.float-cart-count.visible {
-  opacity: 1;
-  transform: scale(1);
-}
+.float-cart-count.visible { opacity: 1; transform: scale(1); }
 
 /* ========================
    CART DRAWER
@@ -338,7 +425,7 @@ body {
   position: fixed;
   inset: 0;
   background: rgba(27,28,24,0.45);
-  z-index: 200;
+  z-index: 400;
   opacity: 0;
   pointer-events: none;
   transition: opacity var(--transition);
@@ -348,12 +435,10 @@ body {
 
 .cart-drawer {
   position: fixed;
-  top: 0;
-  left: 0;
-  bottom: 0;
+  top: 0; left: 0; bottom: 0;
   width: min(400px, 100vw);
   background: var(--cream);
-  z-index: 201;
+  z-index: 401;
   display: flex;
   flex-direction: column;
   transform: translateX(-100%);
@@ -372,7 +457,6 @@ body {
   font-family: 'Noto Serif Hebrew', serif;
   font-size: 1.1rem;
   font-weight: 400;
-  color: var(--charcoal);
 }
 .cart-close {
   background: none;
@@ -385,11 +469,7 @@ body {
 }
 .cart-close:hover { opacity: 0.5; }
 
-.cart-items {
-  flex: 1;
-  overflow-y: auto;
-  padding: 16px 24px;
-}
+.cart-items { flex: 1; overflow-y: auto; padding: 16px 24px; }
 .cart-empty {
   font-size: 0.85rem;
   font-weight: 300;
@@ -406,31 +486,13 @@ body {
   border-bottom: 1px solid var(--gold-line);
 }
 .cart-line-info { flex: 1; min-width: 0; }
-.cart-line-name {
-  font-family: 'Noto Serif Hebrew', serif;
-  font-size: 0.9rem;
-  font-weight: 400;
-  color: var(--charcoal);
-}
-.cart-line-meta {
-  font-size: 0.76rem;
-  font-weight: 300;
-  color: var(--muted);
-  margin-top: 2px;
-}
-.cart-line-price {
-  font-family: 'Noto Serif Hebrew', serif;
-  font-size: 0.9rem;
-  color: var(--gold);
-}
+.cart-line-name { font-family: 'Noto Serif Hebrew', serif; font-size: 0.9rem; font-weight: 400; }
+.cart-line-meta { font-size: 0.76rem; font-weight: 300; color: var(--muted); margin-top: 2px; }
+.cart-line-price { font-family: 'Noto Serif Hebrew', serif; font-size: 0.9rem; color: var(--gold); }
 .cart-line-remove {
-  background: none;
-  border: none;
-  cursor: pointer;
-  font-size: 0.75rem;
-  color: var(--muted);
-  opacity: 0.5;
-  padding: 4px;
+  background: none; border: none; cursor: pointer;
+  font-size: 0.75rem; color: var(--muted);
+  opacity: 0.5; padding: 4px;
   transition: opacity var(--transition);
 }
 .cart-line-remove:hover { opacity: 1; }
@@ -447,10 +509,7 @@ body {
   justify-content: space-between;
   font-family: 'Noto Serif Hebrew', serif;
   font-size: 1rem;
-  font-weight: 400;
-  color: var(--charcoal);
 }
-
 .checkout-btn {
   display: flex;
   align-items: center;
@@ -469,62 +528,6 @@ body {
 .checkout-btn:hover { opacity: 0.88; }
 
 /* ========================
-   SITE FOOTER
-======================== */
-.site-footer {
-  background: var(--charcoal);
-  color: rgba(255,255,255,0.65);
-  padding: 56px 32px 48px;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  gap: 20px;
-  text-align: center;
-}
-
-.order-info {
-  display: flex;
-  flex-direction: column;
-  gap: 8px;
-  font-size: 0.82rem;
-  font-weight: 300;
-  line-height: 1.7;
-  color: rgba(255,255,255,0.55);
-}
-.order-info strong {
-  color: rgba(255,255,255,0.9);
-  font-weight: 400;
-}
-
-.whatsapp-btn {
-  display: inline-flex;
-  align-items: center;
-  gap: 10px;
-  background: #25D366;
-  color: white;
-  text-decoration: none;
-  padding: 13px 28px;
-  font-family: 'Assistant', sans-serif;
-  font-size: 0.82rem;
-  font-weight: 400;
-  letter-spacing: 0.06em;
-  transition: opacity var(--transition);
-  margin-top: 8px;
-}
-.whatsapp-btn:hover { opacity: 0.85; }
-
-.footer-copy {
-  display: flex;
-  flex-direction: column;
-  gap: 4px;
-  font-size: 0.62rem;
-  letter-spacing: 0.12em;
-  text-transform: uppercase;
-  color: rgba(255,255,255,0.25);
-  margin-top: 16px;
-}
-
-/* ========================
    TOAST
 ======================== */
 .toast {
@@ -540,9 +543,9 @@ body {
   padding: 10px 20px;
   opacity: 0;
   pointer-events: none;
-  transition: opacity 0.25s ease, transform 0.25s ease;
+  transition: opacity 0.22s ease, transform 0.22s ease;
+  z-index: 500;
   white-space: nowrap;
-  z-index: 300;
 }
 .toast.show {
   opacity: 1;
