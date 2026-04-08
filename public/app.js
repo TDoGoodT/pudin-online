@@ -1,161 +1,47 @@
 // ========================
-// CONSTANTS
-// ========================
-const HEADER_H  = 108;   // px — must match CSS --header-h
-const STRIP_H   = 56;    // px — collapsed strip height
-const ZONE_H    = () => Math.round(window.innerHeight * 0.9);
-
-// Progress thresholds
-const DESC_SHOW_AT = 0.72;  // description + button fade in after 72% expanded
-const IMAGE_START  = 0.08;  // image starts revealing at 8% progress
-
-// ========================
 // ELEMENTS
 // ========================
-const allCards = Array.from(document.querySelectorAll('.stack-card'));
-const pills    = Array.from(document.querySelectorAll('.cat-pill'));
-const cart     = {};
+const pills       = Array.from(document.querySelectorAll('.cat-pill'));
+const sections    = Array.from(document.querySelectorAll('.section-header'));
+const rows        = Array.from(document.querySelectorAll('.product-row'));
+const cart        = {};
 
 // ========================
-// CATEGORY STATE
-// visibleCards = the currently-filtered subset, in DOM order
-// ========================
-let activeCategory = allCards[0]?.dataset.category ?? null;
-let visibleCards   = allCards.filter(c => c.dataset.category === activeCategory);
-
-// ========================
-// HELPERS
-// ========================
-function ease(t) {
-  return t < 0.5 ? 4 * t * t * t : 1 - Math.pow(-2 * t + 2, 3) / 2;
-}
-function clamp(v, lo, hi) { return Math.max(lo, Math.min(hi, v)); }
-
-function getZoneStart(i) { return i * ZONE_H(); }
-
-// ========================
-// SHOW / HIDE CATEGORIES
-// Filters visible cards, resets scroll, rebuilds layout
-// ========================
-function setCategory(category) {
-  activeCategory = category;
-  visibleCards   = allCards.filter(c => c.dataset.category === category);
-
-  // Hide all, then show only the new visible set
-  allCards.forEach(card => {
-    const inCategory = card.dataset.category === category;
-    card.classList.toggle('cat-hidden', !inCategory);
-    // Reset all state on hidden cards
-    if (!inCategory) {
-      card.style.top = '100vh';
-      card.style.setProperty('--progress', '0');
-      card.style.setProperty('--img-reveal', '0');
-      card.style.setProperty('--content-opacity', '0');
-      card.style.setProperty('--card-opacity', '0');
-      card.classList.remove('is-collapsed', 'is-active', 'is-pending');
-    }
-  });
-
-  setPageHeight();
-
-  // Scroll to start of new category (instant — smooth would feel sluggish here)
-  window.scrollTo({ top: 0, behavior: 'instant' });
-
-  updateLayout();
-  syncActivePill();
-}
-
-// ========================
-// CORE — scroll-driven layout
-// Operates only on visibleCards
-// ========================
-function updateLayout() {
-  const sy   = window.scrollY;
-  const zone = ZONE_H();
-  let collapsedCount = 0;
-
-  visibleCards.forEach((card, i) => {
-    const zStart = i * zone;
-    const zEnd   = (i + 1) * zone;
-
-    const isCollapsed = sy >= zEnd;
-    const isPending   = sy < zStart;
-    const isActive    = !isCollapsed && !isPending;
-
-    card.classList.toggle('is-collapsed', isCollapsed);
-    card.classList.toggle('is-pending',   isPending);
-    card.classList.toggle('is-active',    isActive);
-
-    if (isCollapsed) {
-      card.style.top = (HEADER_H + collapsedCount * STRIP_H) + 'px';
-      card.style.setProperty('--progress',        '0');
-      card.style.setProperty('--img-reveal',      '0');
-      card.style.setProperty('--content-opacity', '0');
-      card.style.setProperty('--card-opacity',    '1');
-      collapsedCount++;
-    } else if (isPending) {
-      card.style.top = '100vh';
-      card.style.setProperty('--progress',        '0');
-      card.style.setProperty('--img-reveal',      '0');
-      card.style.setProperty('--content-opacity', '0');
-      card.style.setProperty('--card-opacity',    '0.5');
-    } else {
-      // Active — compute continuous progress
-      const rawProgress    = clamp((sy - zStart) / zone, 0, 1);
-      const progress       = ease(rawProgress);
-      const imgReveal      = clamp((rawProgress - IMAGE_START) / (1 - IMAGE_START), 0, 1);
-      const contentOpacity = clamp((rawProgress - DESC_SHOW_AT) / (1 - DESC_SHOW_AT), 0, 1);
-      const cardOpacity    = 0.55 + progress * 0.45;
-
-      card.style.top = (HEADER_H + collapsedCount * STRIP_H) + 'px';
-      card.style.setProperty('--progress',        progress.toFixed(4));
-      card.style.setProperty('--img-reveal',      imgReveal.toFixed(4));
-      card.style.setProperty('--content-opacity', contentOpacity.toFixed(4));
-      card.style.setProperty('--card-opacity',    cardOpacity.toFixed(4));
-    }
-  });
-}
-
-// ========================
-// PAGE HEIGHT — based on visible cards only
-// ========================
-function setPageHeight() {
-  const zone  = ZONE_H();
-  const stack = document.getElementById('productStack');
-  stack.style.height = (visibleCards.length * zone + window.innerHeight) + 'px';
-}
-
-// ========================
-// CATEGORY PILL SYNC
-// ========================
-function syncActivePill() {
-  pills.forEach(p => p.classList.toggle('active', p.dataset.category === activeCategory));
-}
-
-// ========================
-// CATEGORY NAV CLICKS
+// CATEGORY NAV — pill clicks scroll to section
 // ========================
 function initCategoryNav() {
   pills.forEach(pill => {
     pill.addEventListener('click', () => {
-      if (pill.dataset.category === activeCategory) return;
-      setCategory(pill.dataset.category);
+      const cat = pill.dataset.category;
+      const section = document.querySelector(`.section-header[data-category="${cat}"]`);
+      if (!section) return;
+      // Offset for fixed header + section header
+      const headerH = document.getElementById('siteHeader').offsetHeight;
+      const top = section.getBoundingClientRect().top + window.scrollY - headerH;
+      window.scrollTo({ top, behavior: 'smooth' });
     });
   });
 }
 
 // ========================
-// COLLAPSED STRIP CLICKS
+// SCROLL SPY — active pill follows scroll position
 // ========================
-function initStripClicks() {
-  allCards.forEach((card, i) => {
-    card.querySelector('.card-collapsed').addEventListener('click', () => {
-      // Find this card's index within visibleCards
-      const vi = visibleCards.indexOf(card);
-      if (vi < 0) return;
-      window.scrollTo({ top: getZoneStart(vi), behavior: 'smooth' });
+function initScrollSpy() {
+  const headerH = () => document.getElementById('siteHeader').offsetHeight;
+
+  const observer = new IntersectionObserver((entries) => {
+    entries.forEach(entry => {
+      if (entry.isIntersecting) {
+        const cat = entry.target.dataset.category;
+        pills.forEach(p => p.classList.toggle('active', p.dataset.category === cat));
+      }
     });
+  }, {
+    rootMargin: `-${document.getElementById('siteHeader').offsetHeight + 2}px 0px -80% 0px`,
+    threshold: 0
   });
+
+  sections.forEach(s => observer.observe(s));
 }
 
 // ========================
@@ -265,25 +151,16 @@ function showToast(msg) {
   toast.textContent = msg;
   toast.classList.add('show');
   if (toastTimer) clearTimeout(toastTimer);
-  toastTimer = setTimeout(() => toast.classList.remove('show'), 2400);
+  toastTimer = setTimeout(() => toast.classList.remove('show'), 2200);
 }
 
 // ========================
 // INIT
 // ========================
 function init() {
-  setPageHeight();
-  updateLayout();
-  initStripClicks();
   initCategoryNav();
-  syncActivePill();
+  initScrollSpy();
   renderCart();
-
-  window.addEventListener('scroll', updateLayout, { passive: true });
-  window.addEventListener('resize', () => {
-    setPageHeight();
-    updateLayout();
-  });
 }
 
 init();

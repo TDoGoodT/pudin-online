@@ -25,309 +25,255 @@
     </nav>
   </header>
 
-  <!-- PRODUCT STACK -->
-  <main class="product-stack" id="productStack">
+  <!-- PRODUCT LIST -->
+  <main class="product-list" id="productList">
 
-    <div class="stack-card" data-id="tiramisu-personal" data-category="tiramisu">
-      <div class="card-collapsed">
-        <span class="card-collapsed-name">טירמיסו אישי</span>
-        <span class="card-collapsed-price">₪45</span>
-      </div>
-      <div class="card-full">
-        <div class="card-image">
-          <div class="image-placeholder"><img src="https://images.unsplash.com/photo-1571877227200-a0d98ea607e9?w=780&q=80&auto=format&fit=crop" alt="טירמיסו אישי" loading="lazy" /></div>
-        </div>
-        <div class="card-body">
-          <div class="card-body-top">
-            <h2 class="card-title">טירמיסו אישי</h2>
-            <p class="card-desc">טירמיסו ביתי עשיר ומפנק, עשוי בקפידה עם מסקרפונה, קפה ובישקוטי. מנה אישית מושלמת.</p>
-            <span class="card-price">₪45</span>
-          </div>
-          <div class="card-actions">
-            <div class="qty-control">
-              <button class="qty-btn" data-action="minus" data-id="tiramisu-personal">−</button>
-              <span class="qty-val" id="qty-tiramisu-personal">1</span>
-              <button class="qty-btn" data-action="plus" data-id="tiramisu-personal">+</button>
-            </div>
-            <button class="add-btn" data-id="tiramisu-personal" data-name="טירמיסו אישי" data-price="45">הוסף לסל</button>
-          </div>
-        </div>
-      </div>
-    </div>
+    <!-- TIRAMISU -->
+    <div class="section-header" data-category="tiramisu">טירמיסו</div>
 
-    <div class="stack-card" data-id="tiramisu-large" data-category="tiramisu">
-      <div class="card-collapsed">
-        <span class="card-collapsed-name">טירמיסו גדול</span>
-        <span class="card-collapsed-price">₪80</span>
+    <article class="product-row" data-category="tiramisu" data-id="tiramisu-personal">
+      <div class="product-image">
+        <img src="https://images.unsplash.com/photo-1571877227200-a0d98ea607e9?w=780&q=80&auto=format&fit=crop" alt="טירמיסו אישי" loading="eager" />
       </div>
-      <div class="card-full">
-        <div class="card-image">
-          <div class="image-placeholder"><img src="https://images.unsplash.com/photo-1603532648955-039310d9ed75?w=780&q=80&auto=format&fit=crop" alt="טירמיסו גדול" loading="lazy" /></div>
+      <div class="product-body">
+        <div class="product-info">
+          <h2 class="product-name">טירמיסו אישי</h2>
+          <p class="product-desc">מסקרפונה, קפה ובישקוטי. ביתי, עשיר, מושלם.</p>
+          <span class="product-price">₪45</span>
         </div>
-        <div class="card-body">
-          <div class="card-body-top">
-            <h2 class="card-title">טירמיסו גדול</h2>
-            <p class="card-desc">טירמיסו ביתי בגודל משפחתי, מושלם לאירועים וסיומי ארוחה. עשיר, קרמי ובלתי נשכח.</p>
-            <span class="card-price">₪80</span>
+        <div class="product-actions">
+          <div class="qty-control">
+            <button class="qty-btn" data-action="minus" data-id="tiramisu-personal">−</button>
+            <span class="qty-val" id="qty-tiramisu-personal">1</span>
+            <button class="qty-btn" data-action="plus" data-id="tiramisu-personal">+</button>
           </div>
-          <div class="card-actions">
-            <div class="qty-control">
-              <button class="qty-btn" data-action="minus" data-id="tiramisu-large">−</button>
-              <span class="qty-val" id="qty-tiramisu-large">1</span>
-              <button class="qty-btn" data-action="plus" data-id="tiramisu-large">+</button>
-            </div>
-            <button class="add-btn" data-id="tiramisu-large" data-name="טירמיסו גדול" data-price="80">הוסף לסל</button>
-          </div>
+          <button class="add-btn" data-id="tiramisu-personal" data-name="טירמיסו אישי" data-price="45">הוסף לסל</button>
         </div>
       </div>
-    </div>
+    </article>
 
-    <div class="stack-card" data-id="krantz-cinnamon" data-category="yeast">
-      <div class="card-collapsed">
-        <span class="card-collapsed-name">עוגת שמרים קינמון</span>
-        <span class="card-collapsed-price">₪55</span>
+    <article class="product-row" data-category="tiramisu" data-id="tiramisu-large">
+      <div class="product-image">
+        <img src="https://images.unsplash.com/photo-1603532648955-039310d9ed75?w=780&q=80&auto=format&fit=crop" alt="טירמיסו גדול" loading="lazy" />
       </div>
-      <div class="card-full">
-        <div class="card-image">
-          <div class="image-placeholder"><img src="https://images.unsplash.com/photo-1509365465985-25d11c17e812?w=780&q=80&auto=format&fit=crop" alt="עוגת שמרים קינמון" loading="lazy" /></div>
+      <div class="product-body">
+        <div class="product-info">
+          <h2 class="product-name">טירמיסו גדול</h2>
+          <p class="product-desc">גודל משפחתי. עשיר, קרמי ובלתי נשכח.</p>
+          <span class="product-price">₪80</span>
         </div>
-        <div class="card-body">
-          <div class="card-body-top">
-            <h2 class="card-title">עוגת שמרים קינמון</h2>
-            <p class="card-desc">עוגת שמרים ביתית ורכה ממולאת בקינמון וסוכר, נאפית עם אהבה ומוגשת טרייה.</p>
-            <span class="card-price">₪55</span>
+        <div class="product-actions">
+          <div class="qty-control">
+            <button class="qty-btn" data-action="minus" data-id="tiramisu-large">−</button>
+            <span class="qty-val" id="qty-tiramisu-large">1</span>
+            <button class="qty-btn" data-action="plus" data-id="tiramisu-large">+</button>
           </div>
-          <div class="card-actions">
-            <div class="qty-control">
-              <button class="qty-btn" data-action="minus" data-id="krantz-cinnamon">−</button>
-              <span class="qty-val" id="qty-krantz-cinnamon">1</span>
-              <button class="qty-btn" data-action="plus" data-id="krantz-cinnamon">+</button>
-            </div>
-            <button class="add-btn" data-id="krantz-cinnamon" data-name="עוגת שמרים קינמון" data-price="55">הוסף לסל</button>
-          </div>
+          <button class="add-btn" data-id="tiramisu-large" data-name="טירמיסו גדול" data-price="80">הוסף לסל</button>
         </div>
       </div>
-    </div>
+    </article>
 
-    <div class="stack-card" data-id="krantz-choco" data-category="yeast">
-      <div class="card-collapsed">
-        <span class="card-collapsed-name">עוגת שמרים שוקולד</span>
-        <span class="card-collapsed-price">₪60</span>
-      </div>
-      <div class="card-full">
-        <div class="card-image">
-          <div class="image-placeholder"><img src="https://images.unsplash.com/photo-1578985545062-69928b1d9587?w=780&q=80&auto=format&fit=crop" alt="עוגת שמרים שוקולד" loading="lazy" /></div>
-        </div>
-        <div class="card-body">
-          <div class="card-body-top">
-            <h2 class="card-title">עוגת שמרים שוקולד</h2>
-            <p class="card-desc">עוגת שמרים גדושה בשוקולד עשיר, שכבות בצק אוורירי וממרח שוקולד נמס בפה.</p>
-            <span class="card-price">₪60</span>
-          </div>
-          <div class="card-actions">
-            <div class="qty-control">
-              <button class="qty-btn" data-action="minus" data-id="krantz-choco">−</button>
-              <span class="qty-val" id="qty-krantz-choco">1</span>
-              <button class="qty-btn" data-action="plus" data-id="krantz-choco">+</button>
-            </div>
-            <button class="add-btn" data-id="krantz-choco" data-name="עוגת שמרים שוקולד" data-price="60">הוסף לסל</button>
-          </div>
-        </div>
-      </div>
-    </div>
+    <!-- YEAST CAKES -->
+    <div class="section-header" data-category="yeast">עוגות שמרים</div>
 
-    <div class="stack-card" data-id="krantz-double" data-category="yeast">
-      <div class="card-collapsed">
-        <span class="card-collapsed-name">עוגת שמרים שוקולד כפול</span>
-        <span class="card-collapsed-price">₪65</span>
+    <article class="product-row" data-category="yeast" data-id="krantz-cinnamon">
+      <div class="product-image">
+        <img src="https://images.unsplash.com/photo-1509365465985-25d11c17e812?w=780&q=80&auto=format&fit=crop" alt="עוגת שמרים קינמון" loading="lazy" />
       </div>
-      <div class="card-full">
-        <div class="card-image">
-          <div class="image-placeholder"><img src="https://images.unsplash.com/photo-1606313564200-e75d5e30476c?w=780&q=80&auto=format&fit=crop" alt="עוגת שמרים שוקולד כפול" loading="lazy" /></div>
+      <div class="product-body">
+        <div class="product-info">
+          <h2 class="product-name">עוגת שמרים קינמון</h2>
+          <p class="product-desc">רכה, ביתית, ממולאת קינמון וסוכר. טרייה.</p>
+          <span class="product-price">₪55</span>
         </div>
-        <div class="card-body">
-          <div class="card-body-top">
-            <h2 class="card-title">עוגת שמרים שוקולד כפול</h2>
-            <p class="card-desc">לחובבי השוקולד האמיתיים — עוגת שמרים עם כפל שכבות שוקולד, עמוקה ומפנקת במיוחד.</p>
-            <span class="card-price">₪65</span>
+        <div class="product-actions">
+          <div class="qty-control">
+            <button class="qty-btn" data-action="minus" data-id="krantz-cinnamon">−</button>
+            <span class="qty-val" id="qty-krantz-cinnamon">1</span>
+            <button class="qty-btn" data-action="plus" data-id="krantz-cinnamon">+</button>
           </div>
-          <div class="card-actions">
-            <div class="qty-control">
-              <button class="qty-btn" data-action="minus" data-id="krantz-double">−</button>
-              <span class="qty-val" id="qty-krantz-double">1</span>
-              <button class="qty-btn" data-action="plus" data-id="krantz-double">+</button>
-            </div>
-            <button class="add-btn" data-id="krantz-double" data-name="עוגת שמרים שוקולד כפול" data-price="65">הוסף לסל</button>
-          </div>
+          <button class="add-btn" data-id="krantz-cinnamon" data-name="עוגת שמרים קינמון" data-price="55">הוסף לסל</button>
         </div>
       </div>
-    </div>
+    </article>
 
-    <div class="stack-card" data-id="alfajores" data-category="cookies">
-      <div class="card-collapsed">
-        <span class="card-collapsed-name">עוגיות אלפחורס</span>
-        <span class="card-collapsed-price">₪50</span>
+    <article class="product-row" data-category="yeast" data-id="krantz-choco">
+      <div class="product-image">
+        <img src="https://images.unsplash.com/photo-1578985545062-69928b1d9587?w=780&q=80&auto=format&fit=crop" alt="עוגת שמרים שוקולד" loading="lazy" />
       </div>
-      <div class="card-full">
-        <div class="card-image">
-          <div class="image-placeholder"><img src="https://images.unsplash.com/photo-1558961363-fa8fdf82db35?w=780&q=80&auto=format&fit=crop" alt="עוגיות אלפחורס" loading="lazy" /></div>
+      <div class="product-body">
+        <div class="product-info">
+          <h2 class="product-name">עוגת שמרים שוקולד</h2>
+          <p class="product-desc">שכבות בצק אוורירי וממרח שוקולד נמס בפה.</p>
+          <span class="product-price">₪60</span>
         </div>
-        <div class="card-body">
-          <div class="card-body-top">
-            <h2 class="card-title">עוגיות אלפחורס</h2>
-            <p class="card-desc">עוגיות שמחת חיים — שתי עוגיות קמח תירס רכות עם דולצה דה לצ׳ה ביניהן ואבקת סוכר מלמעלה.</p>
-            <span class="card-price">₪50</span>
+        <div class="product-actions">
+          <div class="qty-control">
+            <button class="qty-btn" data-action="minus" data-id="krantz-choco">−</button>
+            <span class="qty-val" id="qty-krantz-choco">1</span>
+            <button class="qty-btn" data-action="plus" data-id="krantz-choco">+</button>
           </div>
-          <div class="card-actions">
-            <div class="qty-control">
-              <button class="qty-btn" data-action="minus" data-id="alfajores">−</button>
-              <span class="qty-val" id="qty-alfajores">1</span>
-              <button class="qty-btn" data-action="plus" data-id="alfajores">+</button>
-            </div>
-            <button class="add-btn" data-id="alfajores" data-name="עוגיות אלפחורס" data-price="50">הוסף לסל</button>
-          </div>
+          <button class="add-btn" data-id="krantz-choco" data-name="עוגת שמרים שוקולד" data-price="60">הוסף לסל</button>
         </div>
       </div>
-    </div>
+    </article>
 
-    <div class="stack-card" data-id="rugelach-kinder" data-category="cookies">
-      <div class="card-collapsed">
-        <span class="card-collapsed-name">רוגלך נוטלה וקינדר</span>
-        <span class="card-collapsed-price">₪60</span>
+    <article class="product-row" data-category="yeast" data-id="krantz-double">
+      <div class="product-image">
+        <img src="https://images.unsplash.com/photo-1606313564200-e75d5e30476c?w=780&q=80&auto=format&fit=crop" alt="עוגת שמרים שוקולד כפול" loading="lazy" />
       </div>
-      <div class="card-full">
-        <div class="card-image">
-          <div class="image-placeholder"><img src="https://images.unsplash.com/photo-1598373182133-52452f7691ef?w=780&q=80&auto=format&fit=crop" alt="רוגלך נוטלה וקינדר" loading="lazy" /></div>
+      <div class="product-body">
+        <div class="product-info">
+          <h2 class="product-name">עוגת שמרים שוקולד כפול</h2>
+          <p class="product-desc">כפל שכבות שוקולד. לחובבי השוקולד האמיתיים.</p>
+          <span class="product-price">₪65</span>
         </div>
-        <div class="card-body">
-          <div class="card-body-top">
-            <h2 class="card-title">רוגלך נוטלה וקינדר</h2>
-            <p class="card-desc">רוגלך ביתי פריך ממולא בנוטלה וחתיכות קינדר שוקולד, מתוק ומנחם בדיוק כמו שצריך.</p>
-            <span class="card-price">₪60</span>
+        <div class="product-actions">
+          <div class="qty-control">
+            <button class="qty-btn" data-action="minus" data-id="krantz-double">−</button>
+            <span class="qty-val" id="qty-krantz-double">1</span>
+            <button class="qty-btn" data-action="plus" data-id="krantz-double">+</button>
           </div>
-          <div class="card-actions">
-            <div class="qty-control">
-              <button class="qty-btn" data-action="minus" data-id="rugelach-kinder">−</button>
-              <span class="qty-val" id="qty-rugelach-kinder">1</span>
-              <button class="qty-btn" data-action="plus" data-id="rugelach-kinder">+</button>
-            </div>
-            <button class="add-btn" data-id="rugelach-kinder" data-name="רוגלך נוטלה וקינדר" data-price="60">הוסף לסל</button>
-          </div>
+          <button class="add-btn" data-id="krantz-double" data-name="עוגת שמרים שוקולד כפול" data-price="65">הוסף לסל</button>
         </div>
       </div>
-    </div>
+    </article>
 
-    <div class="stack-card" data-id="rugelach-nutella" data-category="cookies">
-      <div class="card-collapsed">
-        <span class="card-collapsed-name">רוגלך נוטלה</span>
-        <span class="card-collapsed-price">₪55</span>
-      </div>
-      <div class="card-full">
-        <div class="card-image">
-          <div class="image-placeholder"><img src="https://images.unsplash.com/photo-1517686469429-8bdb88b9f907?w=780&q=80&auto=format&fit=crop" alt="רוגלך נוטלה" loading="lazy" /></div>
-        </div>
-        <div class="card-body">
-          <div class="card-body-top">
-            <h2 class="card-title">רוגלך נוטלה</h2>
-            <p class="card-desc">רוגלך ביתי קלאסי ממולא בנוטלה שמנה, פריך בחוץ ונמס בפנים.</p>
-            <span class="card-price">₪55</span>
-          </div>
-          <div class="card-actions">
-            <div class="qty-control">
-              <button class="qty-btn" data-action="minus" data-id="rugelach-nutella">−</button>
-              <span class="qty-val" id="qty-rugelach-nutella">1</span>
-              <button class="qty-btn" data-action="plus" data-id="rugelach-nutella">+</button>
-            </div>
-            <button class="add-btn" data-id="rugelach-nutella" data-name="רוגלך נוטלה" data-price="55">הוסף לסל</button>
-          </div>
-        </div>
-      </div>
-    </div>
+    <!-- COOKIES -->
+    <div class="section-header" data-category="cookies">עוגיות</div>
 
-    <div class="stack-card" data-id="choco-balls" data-category="cookies">
-      <div class="card-collapsed">
-        <span class="card-collapsed-name">כדורי שוקולד</span>
-        <span class="card-collapsed-price">₪40</span>
+    <article class="product-row" data-category="cookies" data-id="alfajores">
+      <div class="product-image">
+        <img src="https://images.unsplash.com/photo-1558961363-fa8fdf82db35?w=780&q=80&auto=format&fit=crop" alt="עוגיות אלפחורס" loading="lazy" />
       </div>
-      <div class="card-full">
-        <div class="card-image">
-          <div class="image-placeholder"><img src="https://images.unsplash.com/photo-1548907040-4baa42d10919?w=780&q=80&auto=format&fit=crop" alt="כדורי שוקולד" loading="lazy" /></div>
+      <div class="product-body">
+        <div class="product-info">
+          <h2 class="product-name">עוגיות אלפחורס</h2>
+          <p class="product-desc">קמח תירס רך, דולצה דה לצ׳ה, אבקת סוכר.</p>
+          <span class="product-price">₪50</span>
         </div>
-        <div class="card-body">
-          <div class="card-body-top">
-            <h2 class="card-title">כדורי שוקולד</h2>
-            <p class="card-desc">כדורי שוקולד ביתיים עשירים, מצופים ומפנקים. מושלמים לכל אירוע או סתם כי מגיע לך.</p>
-            <span class="card-price">₪40</span>
+        <div class="product-actions">
+          <div class="qty-control">
+            <button class="qty-btn" data-action="minus" data-id="alfajores">−</button>
+            <span class="qty-val" id="qty-alfajores">1</span>
+            <button class="qty-btn" data-action="plus" data-id="alfajores">+</button>
           </div>
-          <div class="card-actions">
-            <div class="qty-control">
-              <button class="qty-btn" data-action="minus" data-id="choco-balls">−</button>
-              <span class="qty-val" id="qty-choco-balls">1</span>
-              <button class="qty-btn" data-action="plus" data-id="choco-balls">+</button>
-            </div>
-            <button class="add-btn" data-id="choco-balls" data-name="כדורי שוקולד" data-price="40">הוסף לסל</button>
-          </div>
+          <button class="add-btn" data-id="alfajores" data-name="עוגיות אלפחורס" data-price="50">הוסף לסל</button>
         </div>
       </div>
-    </div>
+    </article>
 
-    <div class="stack-card" data-id="jachnun-single" data-category="jachnun">
-      <div class="card-collapsed">
-        <span class="card-collapsed-name">ג׳חנון — יחידה</span>
-        <span class="card-collapsed-price">₪9</span>
+    <article class="product-row" data-category="cookies" data-id="rugelach-kinder">
+      <div class="product-image">
+        <img src="https://images.unsplash.com/photo-1598373182133-52452f7691ef?w=780&q=80&auto=format&fit=crop" alt="רוגלך נוטלה וקינדר" loading="lazy" />
       </div>
-      <div class="card-full">
-        <div class="card-image">
-          <div class="image-placeholder"><img src="https://images.unsplash.com/photo-1541518763669-27fef04b14ea?w=780&q=80&auto=format&fit=crop" alt="ג׳חנון יחידה" loading="lazy" /></div>
+      <div class="product-body">
+        <div class="product-info">
+          <h2 class="product-name">רוגלך נוטלה וקינדר</h2>
+          <p class="product-desc">פריך, ממולא נוטלה וחתיכות קינדר שוקולד.</p>
+          <span class="product-price">₪60</span>
         </div>
-        <div class="card-body">
-          <div class="card-body-top">
-            <h2 class="card-title">ג׳חנון ביתי — יחידה</h2>
-            <p class="card-desc">ג׳חנון ביתי אפוי בסיר לאורך הלילה, קפוא ומוכן לחימום. מוגש עם עגבנייה מגוררת.</p>
-            <span class="card-price">₪9 ליחידה</span>
+        <div class="product-actions">
+          <div class="qty-control">
+            <button class="qty-btn" data-action="minus" data-id="rugelach-kinder">−</button>
+            <span class="qty-val" id="qty-rugelach-kinder">1</span>
+            <button class="qty-btn" data-action="plus" data-id="rugelach-kinder">+</button>
           </div>
-          <div class="card-actions">
-            <div class="qty-control">
-              <button class="qty-btn" data-action="minus" data-id="jachnun-single">−</button>
-              <span class="qty-val" id="qty-jachnun-single">1</span>
-              <button class="qty-btn" data-action="plus" data-id="jachnun-single">+</button>
-            </div>
-            <button class="add-btn" data-id="jachnun-single" data-name="ג׳חנון ביתי (יחידה)" data-price="9">הוסף לסל</button>
-          </div>
+          <button class="add-btn" data-id="rugelach-kinder" data-name="רוגלך נוטלה וקינדר" data-price="60">הוסף לסל</button>
         </div>
       </div>
-    </div>
+    </article>
 
-    <div class="stack-card" data-id="jachnun-10" data-category="jachnun">
-      <div class="card-collapsed">
-        <span class="card-collapsed-name">ג׳חנון — 10 יחידות</span>
-        <span class="card-collapsed-price">₪80</span>
+    <article class="product-row" data-category="cookies" data-id="rugelach-nutella">
+      <div class="product-image">
+        <img src="https://images.unsplash.com/photo-1517686469429-8bdb88b9f907?w=780&q=80&auto=format&fit=crop" alt="רוגלך נוטלה" loading="lazy" />
       </div>
-      <div class="card-full">
-        <div class="card-image">
-          <div class="image-placeholder"><img src="https://images.unsplash.com/photo-1565299585323-38d6b0865b47?w=780&q=80&auto=format&fit=crop" alt="ג׳חנון 10 יחידות" loading="lazy" /></div>
+      <div class="product-body">
+        <div class="product-info">
+          <h2 class="product-name">רוגלך נוטלה</h2>
+          <p class="product-desc">קלאסי. פריך בחוץ, נמס בפנים.</p>
+          <span class="product-price">₪55</span>
         </div>
-        <div class="card-body">
-          <div class="card-body-top">
-            <h2 class="card-title">ג׳חנון ביתי — 10 יחידות</h2>
-            <p class="card-desc">מארז 10 יחידות ג׳חנון ביתי קפוא. מושלם לשבת, לאירוח או לאצור במקפיא. חיסכון לעומת רכישה בודדת.</p>
-            <span class="card-price">₪80 ל-10 יחידות</span>
+        <div class="product-actions">
+          <div class="qty-control">
+            <button class="qty-btn" data-action="minus" data-id="rugelach-nutella">−</button>
+            <span class="qty-val" id="qty-rugelach-nutella">1</span>
+            <button class="qty-btn" data-action="plus" data-id="rugelach-nutella">+</button>
           </div>
-          <div class="card-actions">
-            <div class="qty-control">
-              <button class="qty-btn" data-action="minus" data-id="jachnun-10">−</button>
-              <span class="qty-val" id="qty-jachnun-10">1</span>
-              <button class="qty-btn" data-action="plus" data-id="jachnun-10">+</button>
-            </div>
-            <button class="add-btn" data-id="jachnun-10" data-name="ג׳חנון ביתי (10 יחידות)" data-price="80">הוסף לסל</button>
-          </div>
+          <button class="add-btn" data-id="rugelach-nutella" data-name="רוגלך נוטלה" data-price="55">הוסף לסל</button>
         </div>
       </div>
-    </div>
+    </article>
+
+    <article class="product-row" data-category="cookies" data-id="choco-balls">
+      <div class="product-image">
+        <img src="https://images.unsplash.com/photo-1548907040-4baa42d10919?w=780&q=80&auto=format&fit=crop" alt="כדורי שוקולד" loading="lazy" />
+      </div>
+      <div class="product-body">
+        <div class="product-info">
+          <h2 class="product-name">כדורי שוקולד</h2>
+          <p class="product-desc">עשירים, מצופים, מפנקים. כי מגיע לך.</p>
+          <span class="product-price">₪40</span>
+        </div>
+        <div class="product-actions">
+          <div class="qty-control">
+            <button class="qty-btn" data-action="minus" data-id="choco-balls">−</button>
+            <span class="qty-val" id="qty-choco-balls">1</span>
+            <button class="qty-btn" data-action="plus" data-id="choco-balls">+</button>
+          </div>
+          <button class="add-btn" data-id="choco-balls" data-name="כדורי שוקולד" data-price="40">הוסף לסל</button>
+        </div>
+      </div>
+    </article>
+
+    <!-- JACHNUN -->
+    <div class="section-header" data-category="jachnun">ג׳חנון</div>
+
+    <article class="product-row" data-category="jachnun" data-id="jachnun-single">
+      <div class="product-image">
+        <img src="https://images.unsplash.com/photo-1541518763669-27fef04b14ea?w=780&q=80&auto=format&fit=crop" alt="ג׳חנון יחידה" loading="lazy" />
+      </div>
+      <div class="product-body">
+        <div class="product-info">
+          <h2 class="product-name">ג׳חנון — יחידה</h2>
+          <p class="product-desc">אפוי לאורך הלילה, קפוא ומוכן לחימום. עם עגבנייה.</p>
+          <span class="product-price">₪9 ליחידה</span>
+        </div>
+        <div class="product-actions">
+          <div class="qty-control">
+            <button class="qty-btn" data-action="minus" data-id="jachnun-single">−</button>
+            <span class="qty-val" id="qty-jachnun-single">1</span>
+            <button class="qty-btn" data-action="plus" data-id="jachnun-single">+</button>
+          </div>
+          <button class="add-btn" data-id="jachnun-single" data-name="ג׳חנון ביתי (יחידה)" data-price="9">הוסף לסל</button>
+        </div>
+      </div>
+    </article>
+
+    <article class="product-row" data-category="jachnun" data-id="jachnun-10">
+      <div class="product-image">
+        <img src="https://images.unsplash.com/photo-1565299585323-38d6b0865b47?w=780&q=80&auto=format&fit=crop" alt="ג׳חנון 10 יחידות" loading="lazy" />
+      </div>
+      <div class="product-body">
+        <div class="product-info">
+          <h2 class="product-name">ג׳חנון — 10 יחידות</h2>
+          <p class="product-desc">מארז לשבת, לאירוח, למקפיא. חיסכון לעומת בודד.</p>
+          <span class="product-price">₪80 ל-10 יחידות</span>
+        </div>
+        <div class="product-actions">
+          <div class="qty-control">
+            <button class="qty-btn" data-action="minus" data-id="jachnun-10">−</button>
+            <span class="qty-val" id="qty-jachnun-10">1</span>
+            <button class="qty-btn" data-action="plus" data-id="jachnun-10">+</button>
+          </div>
+          <button class="add-btn" data-id="jachnun-10" data-name="ג׳חנון ביתי (10 יחידות)" data-price="80">הוסף לסל</button>
+        </div>
+      </div>
+    </article>
 
   </main>
 
-  <!-- ORDER INFO + FOOTER -->
+  <!-- FOOTER -->
   <footer class="site-footer">
     <div class="order-info">
       <p>הזמנות מתקבלות עד <strong>3 ימים מראש</strong></p>
