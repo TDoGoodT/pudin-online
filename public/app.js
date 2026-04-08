@@ -1,146 +1,137 @@
 // ========================
 // CONSTANTS
 // ========================
-const HEADER_H = 108;   // matches --header-h in CSS
-const STRIP_H  = 64;    // matches --strip-h in CSS
+const HEADER_H = 108;
+const STRIP_H  = 64;
 
 // ========================
 // STATE
 // ========================
-const cart = {}; // { id: { name, price, qty } }
-
-// ========================
-// STICKY SCROLL MECHANIC
-// ========================
+const cart = {};
 const cards = Array.from(document.querySelectorAll('.stack-card'));
 
-function updateStickyTops() {
-  // Each card's sticky top = header height + (number of already-collapsed cards × strip height)
-  // But only cards BEFORE this one that are collapsed count.
-  let collapsedCount = 0;
-  cards.forEach(card => {
-    const top = HEADER_H + collapsedCount * STRIP_H;
-    card.style.top = top + 'px';
-    if (card.classList.contains('is-collapsed')) collapsedCount++;
+// naturalTop[i] = offsetTop of card i in normal document flow (no sticky)
+let naturalTops = [];
+
+// ========================
+// MEASURE NATURAL POSITIONS
+// Temporarily make everything relative so we get true document offsets
+// ========================
+function measureNaturalTops() {
+  // Save and clear sticky
+  cards.forEach(c => {
+    c.style.position = 'relative';
+    c.style.top = '0px';
   });
-}
 
-function updateCollapsedState() {
-  cards.forEach((card, i) => {
-    const rect = card.getBoundingClientRect();
-    // A card is "collapsed" once its full content has been scrolled past —
-    // i.e. when the card's bottom edge is at or above where the next card starts.
-    // We detect this by checking if the card is in sticky collapsed position:
-    // the card is collapsed when the NEXT card is also sticky and overlapping it.
-    // Simpler heuristic: card is collapsed when its top is at exactly its sticky threshold
-    // AND the scroll position has moved it to show only the strip.
-
-    // Practical approach: a card collapses when the viewport top of the card
-    // equals its assigned sticky top (meaning it's stuck) AND there's content
-    // below that's pushing it — i.e. not the currently active card.
-    // We treat the LAST non-collapsed card as "active".
-
-    // Actually the cleanest approach: collapse all cards whose bottom edge
-    // is above the top of the next card's full content area.
-    // We use IntersectionObserver for this — see initObservers().
+  naturalTops = cards.map(c => {
+    let el = c;
+    let top = 0;
+    while (el) {
+      top += el.offsetTop;
+      el = el.offsetParent;
+    }
+    return top;
   });
-}
 
-// Use IntersectionObserver to detect when a card's full content scrolls out of view upward
-function initScrollMechanic() {
-  // We observe a sentinel element at the top of each card-full.
-  // When it leaves the top of the viewport (going up), the card collapses.
-
-  cards.forEach((card, i) => {
-    const cardFull = card.querySelector('.card-full');
-
-    // Create a sentinel div at the very bottom of the card-full
-    const sentinel = document.createElement('div');
-    sentinel.className = 'scroll-sentinel';
-    sentinel.style.cssText = 'height:1px;width:100%;';
-    cardFull.appendChild(sentinel);
-
-    const observer = new IntersectionObserver(
-      (entries) => {
-        entries.forEach(entry => {
-          if (!entry.isIntersecting && entry.boundingClientRect.top < 0) {
-            // Sentinel has scrolled above viewport — card should collapse
-            card.classList.add('is-collapsed');
-          } else if (entry.isIntersecting || entry.boundingClientRect.top > 0) {
-            // Sentinel is visible or below — card should be full
-            card.classList.remove('is-collapsed');
-          }
-          updateStickyTops();
-        });
-      },
-      {
-        root: null,
-        rootMargin: `${-HEADER_H}px 0px 0px 0px`,
-        threshold: 0
-      }
-    );
-
-    observer.observe(sentinel);
-
-    // Clicking a collapsed strip scrolls back to that card
-    const strip = card.querySelector('.card-collapsed');
-    strip.addEventListener('click', () => {
-      const top = card.getBoundingClientRect().top + window.scrollY - HEADER_H;
-      window.scrollTo({ top, behavior: 'smooth' });
-    });
+  // Restore sticky
+  cards.forEach(c => {
+    c.style.position = '';
+    c.style.top = '';
   });
 }
 
 // ========================
-// CATEGORY NAV
+// LAYOUT UPDATE
+// Called on every scroll tick
+// ========================
+function updateLayout() {
+  const scrollY = window.scrollY;
+  let collapsedBefore = 0; // strips stacked above current card
+
+  cards.forEach((card, i) => {
+    // This card collapses once the user has scrolled past it entirely.
+    // "Past it" means: scroll position has brought the NEXT card's natural top
+    // up to the bottom edge of the sticky zone (header + existing strips).
+    //
+    // Collapse condition: there is a next card AND
+    //   scrollY + HEADER_H + collapsedBefore * STRIP_H >= naturalTops[i+1]
+    //
+    // Which rearranges to:
+    //   scrollY >= naturalTops[i+1] - HEADER_H - collapsedBefore * STRIP_H
+
+    let shouldCollapse = false;
+    if (i < cards.length - 1) {
+      const collapseAt = naturalTops[i + 1] - HEADER_H - collapsedBefore * STRIP_H;
+      shouldCollapse = scrollY >= collapseAt;
+    }
+
+    card.classList.toggle('is-collapsed', shouldCollapse);
+
+    // Sticky top for this card = header + strips stacked above it
+    card.style.top = (HEADER_H + collapsedBefore * STRIP_H) + 'px';
+
+    if (shouldCollapse) collapsedBefore++;
+  });
+
+  syncActivePill();
+}
+
+// ========================
+// CATEGORY PILL SYNC
+// ========================
+const pills = Array.from(document.querySelectorAll('.cat-pill'));
+
+function syncActivePill() {
+  // The "active" card is the first non-collapsed one
+  let activeCategory = null;
+  for (const card of cards) {
+    if (!card.classList.contains('is-collapsed')) {
+      activeCategory = card.dataset.category;
+      break;
+    }
+  }
+  if (!activeCategory) {
+    activeCategory = cards[cards.length - 1]?.dataset.category;
+  }
+
+  pills.forEach(p => {
+    p.classList.toggle('active', p.dataset.category === activeCategory);
+  });
+}
+
+// ========================
+// CATEGORY NAV CLICKS
 // ========================
 function initCategoryNav() {
-  const pills = document.querySelectorAll('.cat-pill');
-
   pills.forEach(pill => {
     pill.addEventListener('click', () => {
-      // Update active state
-      pills.forEach(p => p.classList.remove('active'));
-      pill.classList.add('active');
-
-      // Find first card in that category and scroll to it
       const category = pill.dataset.category;
-      const target = document.querySelector(`.stack-card[data-category="${category}"]`);
-      if (!target) return;
+      const targetIdx = cards.findIndex(c => c.dataset.category === category);
+      if (targetIdx < 0) return;
 
-      // Reset all cards above this one to non-collapsed first
-      // (so the sticky offsets are correct)
-      const targetIdx = cards.indexOf(target);
-      cards.forEach((card, i) => {
-        if (i < targetIdx) {
-          // Cards before target: will be collapsed after scroll, don't force state
-        }
-        if (i >= targetIdx) {
-          card.classList.remove('is-collapsed');
-        }
-      });
-      updateStickyTops();
-
-      const top = target.getBoundingClientRect().top + window.scrollY - HEADER_H;
-      window.scrollTo({ top, behavior: 'smooth' });
+      // Scroll so that card[targetIdx] becomes the first non-collapsed card.
+      // At that scroll position: scrollY = naturalTops[targetIdx] - HEADER_H - (cards before it that'll be collapsed) * STRIP_H
+      // But we want it just at the threshold where it's NOT collapsed yet,
+      // so scroll to naturalTops[targetIdx] - HEADER_H - (targetIdx) * STRIP_H
+      // Actually: use targetIdx as collapsedBefore since all previous cards collapse
+      const scrollTo = naturalTops[targetIdx] - HEADER_H - targetIdx * STRIP_H;
+      window.scrollTo({ top: Math.max(0, scrollTo), behavior: 'smooth' });
     });
   });
+}
 
-  // Update active pill on scroll based on visible card
-  window.addEventListener('scroll', () => {
-    let activeCategory = null;
-    cards.forEach(card => {
-      if (!card.classList.contains('is-collapsed')) {
-        activeCategory = card.dataset.category;
-        return;
-      }
+// ========================
+// COLLAPSED STRIP CLICKS — tap to go back to that card
+// ========================
+function initStripClicks() {
+  cards.forEach((card, i) => {
+    card.querySelector('.card-collapsed').addEventListener('click', () => {
+      // Scroll to just before this card collapses — i.e. just before next card's threshold
+      const scrollTo = naturalTops[i] - HEADER_H - i * STRIP_H;
+      window.scrollTo({ top: Math.max(0, scrollTo - 1), behavior: 'smooth' });
     });
-    if (activeCategory) {
-      pills.forEach(p => {
-        p.classList.toggle('active', p.dataset.category === activeCategory);
-      });
-    }
-  }, { passive: true });
+  });
 }
 
 // ========================
@@ -150,13 +141,10 @@ document.addEventListener('click', e => {
   const btn = e.target.closest('.qty-btn');
   if (!btn) return;
   const id = btn.dataset.id;
-  const action = btn.dataset.action;
   const el = document.getElementById(`qty-${id}`);
   if (!el) return;
-  let val = parseInt(el.textContent) + (action === 'plus' ? 1 : -1);
-  if (val < 1) val = 1;
-  if (val > 99) val = 99;
-  el.textContent = val;
+  let val = parseInt(el.textContent) + (btn.dataset.action === 'plus' ? 1 : -1);
+  el.textContent = Math.max(1, Math.min(99, val));
 });
 
 function getQty(id) {
@@ -165,7 +153,7 @@ function getQty(id) {
 }
 
 // ========================
-// CART
+// CART — ADD
 // ========================
 document.addEventListener('click', e => {
   const btn = e.target.closest('.add-btn');
@@ -181,7 +169,6 @@ document.addEventListener('click', e => {
     cart[id] = { name, price, qty };
   }
 
-  // Reset qty display
   const qtyEl = document.getElementById(`qty-${id}`);
   if (qtyEl) qtyEl.textContent = '1';
 
@@ -194,11 +181,14 @@ function removeFromCart(id) {
   renderCart();
 }
 
+// ========================
+// CART — RENDER
+// ========================
 function renderCart() {
-  const itemsEl    = document.getElementById('cartItems');
-  const footerEl   = document.getElementById('cartFooter');
-  const totalEl    = document.getElementById('cartTotal');
-  const countEl    = document.getElementById('cartCount');
+  const itemsEl     = document.getElementById('cartItems');
+  const footerEl    = document.getElementById('cartFooter');
+  const totalEl     = document.getElementById('cartTotal');
+  const countEl     = document.getElementById('cartCount');
   const checkoutBtn = document.getElementById('checkoutBtn');
 
   const ids        = Object.keys(cart);
@@ -231,14 +221,12 @@ function renderCart() {
     `;
   }).join('');
 
-  // Build WhatsApp message
   let msg = 'שלום זיו! אשמח להזמין:\n\n';
   ids.forEach(id => {
     const item = cart[id];
     msg += `• ${item.name} × ${item.qty} — ₪${item.price * item.qty}\n`;
   });
   msg += `\nסה״כ: ₪${totalPrice}\n\nאנא אשרי זמינות ופרטי איסוף/משלוח`;
-
   checkoutBtn.href = `https://wa.me/9720544878282?text=${encodeURIComponent(msg)}`;
 }
 
@@ -250,7 +238,6 @@ function openCart() {
   document.getElementById('cartOverlay').classList.add('active');
   document.body.style.overflow = 'hidden';
 }
-
 function closeCart() {
   document.getElementById('cartDrawer').classList.remove('active');
   document.getElementById('cartOverlay').classList.remove('active');
@@ -276,7 +263,23 @@ function showToast(msg) {
 // ========================
 // INIT
 // ========================
-renderCart();
-updateStickyTops();
-initScrollMechanic();
-initCategoryNav();
+function init() {
+  renderCart();
+
+  // Let fonts and layout fully render before measuring
+  requestAnimationFrame(() => {
+    requestAnimationFrame(() => {
+      measureNaturalTops();
+      initStripClicks();
+      initCategoryNav();
+      updateLayout();
+      window.addEventListener('scroll', updateLayout, { passive: true });
+      window.addEventListener('resize', () => {
+        measureNaturalTops();
+        updateLayout();
+      });
+    });
+  });
+}
+
+document.addEventListener('DOMContentLoaded', init);
